@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tasas por Mes</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h1>Tasas por Mes</h1>
+        <label for="startDate">Fecha Inicial:</label>
+        <input type="date" id="startDate" v-model="startDate">
+        <label for="endDate">Fecha Final:</label>
+        <input type="date" id="endDate" v-model="endDate">
+        <button @click="liquidar">Liquidar</button> <!-- Cambiado de "Buscar Tasas" a "Liquidar" -->
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha I</th>
+                    <th>Fecha F</th>
+                    <th>Días</th>
+                    <th>Tasa E.A.</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="rate in rates" :key="rate.date">
+                    <td>{{ rate.date }}</td>
+                    <td>{{ rate.value }}</td>
+                    <td>{{ rate.days }}</td>
+                    <td>{{ rate.rate }}</td> <!-- Mostrar la nueva propiedad -->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
