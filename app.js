@@ -70,6 +70,9 @@ new Vue({
             const idSheets = '1Bd6qpAW36V8sVbcpjFkfD17t4IPPYiVkPFpXHNCGFLQ';
             const apiKey = 'AIzaSyAYGHByZLx72_QpK8jSCkz-v54vnkjhdfU';
             const values = 'A2:E1000';
+            let tasaEfectiva=0;
+            let tasaNominal=0;
+            let tasaDiaria=0;
 
             try {
                 const response = await axios.get(`https://sheets.googleapis.com/v4/spreadsheets/${idSheets}/values/${values}?key=${apiKey}`);
@@ -81,16 +84,22 @@ new Vue({
                         const fechaFinColumna = this.convertirAFecha(row[1]);
                         const fechaInicial = new Date(new Date(this.startDate).getTime() + 18000000);
                         const fechaFinal = new Date(new Date(this.endDate).getTime() + 18000000);
+
                         return fechaFinColumna >= fechaInicial && fechaInicioColumna <= fechaFinal;
                     });
 
                 if (filteredData.length === 1) {
                     const row = filteredData[0];
+                    tasaEfectiva=(parseFloat(row[2].replace(",","."))/100);
+                    tasaNominal=(((1+tasaEfectiva)**(1/12)-1)*12);
+                    tasaDiaria=(tasaNominal/360)
                     this.rates = [{
                         date: this.convertirFechaLargaAFormatoCorto(new Date(new Date(this.startDate).getTime() + 18000000)),
                         value: this.convertirFechaLargaAFormatoCorto(new Date(new Date(this.endDate).getTime() + 18000000)),
                         days: Math.ceil((new Date(new Date(this.endDate).getTime() + 18000000) - new Date(new Date(this.startDate).getTime() + 18000000)) / (1000 * 60 * 60 * 24) + 1 ),
-                        rate:row[2]
+                        rate:(tasaEfectiva*100).toFixed(3)+"%",
+                        rateN:(tasaNominal*100).toFixed(3)+"%",
+                        rateD:(tasaDiaria*100).toFixed(3)+"%"
                     }];
                 } else {
                     this.rates = filteredData.map(row => {
@@ -102,27 +111,42 @@ new Vue({
                         let dias = 0;
                         if (fechaInicial >= fechaInicioColumna && fechaInicial <= fechaFinColumna) {
                             dias = Math.ceil((fechaFinColumna - fechaInicial) / (1000 * 60 * 60 * 24) + 1 );
+                            tasaEfectiva=(parseFloat(row[2].replace(",","."))/100);
+                            tasaNominal=(((1+tasaEfectiva)**(1/12)-1)*12);
+                            tasaDiaria=(tasaNominal/360)
                             return {
                                 date: this.convertirFechaLargaAFormatoCorto(fechaInicial),
                                 value: row[1],
                                 days: dias,
-                                rate:row[2]
+                                rate:(tasaEfectiva*100).toFixed(3)+"%",
+                                rateN:(tasaNominal*100).toFixed(3)+"%",
+                                rateD:(tasaDiaria*100).toFixed(3)+"%"
                             };
                         } else if (fechaFinal >= fechaInicioColumna && fechaFinal <= fechaFinColumna) {
                             dias = Math.ceil((fechaFinal - fechaInicioColumna) / (1000 * 60 * 60 * 24) + 1);
+                            tasaEfectiva=(parseFloat(row[2].replace(",","."))/100);
+                            tasaNominal=(((1+tasaEfectiva)**(1/12)-1)*12);
+                            tasaDiaria=(tasaNominal/360)
                             return {
                                 date: this.convertirFechaLargaAFormatoCorto(fechaInicioColumna),
                                 value: this.convertirFechaLargaAFormatoCorto(fechaFinal),
                                 days: dias,
-                                rate:row[2]
+                                rate:(tasaEfectiva*100).toFixed(3)+"%",
+                                rateN:(tasaNominal*100).toFixed(3)+"%",
+                                rateD:(tasaDiaria*100).toFixed(3)+"%"
                             };
                         } else {
                             dias = Math.ceil((fechaFinColumna - fechaInicioColumna) / (1000 * 60 * 60 * 24)+ 1);
+                            tasaEfectiva=(parseFloat(row[2].replace(",","."))/100);
+                            tasaNominal=(((1+tasaEfectiva)**(1/12)-1)*12);
+                            tasaDiaria=(tasaNominal/360)
                             return {
                                 date: this.convertirFechaLargaAFormatoCorto(fechaInicioColumna),
                                 value: row[1],
                                 days: dias,
-                                rate:row[2]
+                                rate:(tasaEfectiva*100).toFixed(3)+"%",
+                                rateN:(tasaNominal*100).toFixed(3)+"%",
+                                rateD:(tasaDiaria*100).toFixed(3)+"%"
                             };
                         }
                     });
