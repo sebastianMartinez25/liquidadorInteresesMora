@@ -14,7 +14,21 @@
         <input type="date" id="startDate" v-model="startDate">
         <label for="endDate">Fecha Final:</label>
         <input type="date" id="endDate" v-model="endDate">
-        <button @click="liquidar">Liquidar</button> <!-- Cambiado de "Buscar Tasas" a "Liquidar" -->
+        <br>
+        <label for="capital">Capital:</label>
+<input 
+    type="text" 
+    id="capital" 
+    v-model="capital" 
+    placeholder="Ingresa el capital" 
+    @input="permitirNumerosEnteros" 
+    @blur="formatearCapitalEntero"
+>
+<br>
+
+
+        
+        <button @click="liquidar">Liquidar</button>
         <table>
             <thead>
                 <tr>
@@ -25,7 +39,6 @@
                     <th>Tasa Nominal</th>
                     <th>Tasa Diaria</th>
                     <th>Intereses</th>
-                    
                 </tr>
             </thead>
             <tbody>
@@ -33,10 +46,21 @@
                     <td>{{ rate.date }}</td>
                     <td>{{ rate.value }}</td>
                     <td>{{ rate.days }}</td>
-                    <td>{{ rate.rate }}</td> <!-- Mostrar la nueva propiedad -->
+                    <td>{{ rate.rate }}</td>
                     <td>{{ rate.rateN }}</td>
                     <td>{{ rate.rateD }}</td>
+                    <td>{{ rate.interest }}</td>
                 </tr>
+                <!-- Fila para el total del capital -->
+    <tr>
+        <td colspan="5" style="font-weight: bold; text-align: right;">Total:</td>
+        <td colspan="2">{{ totalCapital | formatoMoneda }}</td>
+    </tr>
+    <!-- Fila para el total de intereses -->
+    <tr>
+        <td colspan="5" style="font-weight: bold; text-align: right;">Total Intereses:</td>
+        <td colspan="2">{{ totalIntereses | formatoMoneda }}</td>
+    </tr>
             </tbody>
         </table>
     </div>

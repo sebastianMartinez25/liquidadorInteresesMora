@@ -1,11 +1,24 @@
+Vue.filter('formatoMoneda', function(valor) {
+    if (!valor) return '0.00';
+
+    return new Intl.NumberFormat('en-US', {
+        style: 'decimal',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    }).format(valor);
+});
+
 new Vue({
     el: '#app', // Vincula Vue al elemento HTML con ID 'app'
     data: {
         startDate: '', // Fecha inicial seleccionada por el usuario
-        endDate: '',   // Fecha final seleccionada por el usuario
+        endDate: '',  
+        capital:'', // Fecha final seleccionada por el usuario
         rates: [],     // Lista para almacenar los datos filtrados
         firstRowDate: null, // Fecha inicial (primera fila de Google Sheets)
-        lastRowDate: null   // Fecha final (última fila de Google Sheets)
+        lastRowDate: null,   // Fecha final (última fila de Google Sheets)
+        totalCapital: 0,    // Total acumulado del capital
+        totalIntereses: 0 
     },
     methods: {
         // Función para convertir una cadena de texto a un objeto Date
@@ -21,12 +34,69 @@ new Vue({
             const año = fecha.getFullYear();
             return `${dia.toString().padStart(2, '0')}/${mes.toString().padStart(2, '0')}/${año}`;
         },
+        
+           // Permitir solo números enteros durante la escritura
+    permitirNumerosEnteros(event) {
+        const valor = event.target.value.replace(/[^0-9]/g, ''); // Elimina cualquier carácter que no sea numérico
+        this.capital = valor; // Actualiza el modelo con el valor limpio
+    },
+    // Formatear el valor como entero al perder el foco
+    formatearCapitalEntero() {
+        if (!this.capital) return; // Si está vacío, no formatea
+
+        // Convertir el valor a número entero
+        let numero = parseInt(this.capital.replace(/,/g, ''), 10);
+
+        if (!isNaN(numero)) {
+            // Aplica formato con separación de miles (sin decimales)
+            this.capital = new Intl.NumberFormat('en-US', {
+                style: 'decimal',
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            }).format(numero);
+        } else {
+            this.capital = ''; // Si no es válido, resetea el campo
+        }
+    },
+        
+    formatearIntereses(valor) {
+        if (!valor) return ''; // Si no hay valor, devuelve una cadena vacía
+
+        // Si el valor contiene un punto decimal, se mantiene como está
+        valor = valor.toString().replace('.', '.');
+
+        // Convierte el valor a un número flotante
+        const numero = parseFloat(valor);
+
+        if (isNaN(numero)) return ''; // Si no es un número válido, devuelve una cadena vacía
+
+        // Aplica formato con separación de miles (comas) y hasta 2 decimales (puntos)
+        return new Intl.NumberFormat('en-US', { // Cambiado al formato en-US
+            style: 'decimal',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        }).format(numero);
+    },
+    actualizarTotales() {
+        // Calcula el total de intereses
+        this.totalIntereses = this.rates.reduce((sum, rate) => sum + parseFloat(rate.interest.replace(/,/g, '')), 0);
+    
+        // Calcula el total del capital sumando el capital inicial más los intereses
+        this.totalCapital = parseFloat(this.capital.replace(/,/g, '')) + this.totalIntereses;
+    },
+    
+    
         async liquidar() {
             if (!this.startDate || !this.endDate) {
                 alert('Por favor, selecciona una fecha inicial y final.');
                 return;
             }
-
+           // Desformatea el capital antes de validarlo
+           const capitalNumerico = parseFloat(this.capital.replace(/,/g, ''));
+           if (!capitalNumerico || capitalNumerico <= 0) {
+               alert('Por favor, ingresa un capital válido mayor a 0.');
+               return;
+           }
             const fechaInicial = new Date(new Date(this.startDate).getTime() + 18000000); // Ajusta zona horaria
             const fechaFinal = new Date(new Date(this.endDate).getTime() + 18000000);     // Ajusta zona horaria
 
@@ -49,7 +119,7 @@ new Vue({
                 return;
             }
 
-            this.fetchRates();
+            this.fetchRates(capitalNumerico);
         },
         async obtenerFechasLimite() {
             const idSheets = '1Bd6qpAW36V8sVbcpjFkfD17t4IPPYiVkPFpXHNCGFLQ';
@@ -66,14 +136,16 @@ new Vue({
                 alert('Error al obtener las fechas de la hoja. Inténtalo de nuevo más tarde.');
             }
         },
-        async fetchRates() {
+        async fetchRates(capitalNumerico) {
             const idSheets = '1Bd6qpAW36V8sVbcpjFkfD17t4IPPYiVkPFpXHNCGFLQ';
             const apiKey = 'AIzaSyAYGHByZLx72_QpK8jSCkz-v54vnkjhdfU';
             const values = 'A2:E1000';
             let tasaEfectiva=0;
             let tasaNominal=0;
             let tasaDiaria=0;
-
+            let dias=0;
+            let intereses=0;
+            
             try {
                 const response = await axios.get(`https://sheets.googleapis.com/v4/spreadsheets/${idSheets}/values/${values}?key=${apiKey}`);
                 const data = response.data.values;
@@ -92,14 +164,18 @@ new Vue({
                     const row = filteredData[0];
                     tasaEfectiva=(parseFloat(row[2].replace(",","."))/100);
                     tasaNominal=(((1+tasaEfectiva)**(1/12)-1)*12);
-                    tasaDiaria=(tasaNominal/360)
+                    tasaDiaria=(tasaNominal/360);
+                    dias=Math.ceil((new Date(new Date(this.endDate).getTime() + 18000000) - new Date(new Date(this.startDate).getTime() + 18000000)) / (1000 * 60 * 60 * 24) + 1 );
+                 
+                    intereses=(parseInt(this.capital.replace(/,/g, ''))*tasaDiaria*dias);
                     this.rates = [{
                         date: this.convertirFechaLargaAFormatoCorto(new Date(new Date(this.startDate).getTime() + 18000000)),
                         value: this.convertirFechaLargaAFormatoCorto(new Date(new Date(this.endDate).getTime() + 18000000)),
-                        days: Math.ceil((new Date(new Date(this.endDate).getTime() + 18000000) - new Date(new Date(this.startDate).getTime() + 18000000)) / (1000 * 60 * 60 * 24) + 1 ),
+                        days: dias,
                         rate:(tasaEfectiva*100).toFixed(3)+"%",
                         rateN:(tasaNominal*100).toFixed(3)+"%",
-                        rateD:(tasaDiaria*100).toFixed(3)+"%"
+                        rateD:(tasaDiaria*100).toFixed(3)+"%",
+                        interest:this.formatearIntereses(intereses)
                     }];
                 } else {
                     this.rates = filteredData.map(row => {
@@ -108,48 +184,59 @@ new Vue({
                         const fechaInicial = new Date(new Date(this.startDate).getTime() + 18000000);
                         const fechaFinal = new Date(new Date(this.endDate).getTime() + 18000000);
 
-                        let dias = 0;
+                       
                         if (fechaInicial >= fechaInicioColumna && fechaInicial <= fechaFinColumna) {
                             dias = Math.ceil((fechaFinColumna - fechaInicial) / (1000 * 60 * 60 * 24) + 1 );
                             tasaEfectiva=(parseFloat(row[2].replace(",","."))/100);
                             tasaNominal=(((1+tasaEfectiva)**(1/12)-1)*12);
-                            tasaDiaria=(tasaNominal/360)
+                            tasaDiaria=(tasaNominal/360);
+                            
+                    intereses=(parseInt(this.capital.replace(/,/g, ''))*tasaDiaria*dias);
                             return {
                                 date: this.convertirFechaLargaAFormatoCorto(fechaInicial),
                                 value: row[1],
                                 days: dias,
                                 rate:(tasaEfectiva*100).toFixed(3)+"%",
                                 rateN:(tasaNominal*100).toFixed(3)+"%",
-                                rateD:(tasaDiaria*100).toFixed(3)+"%"
+                                rateD:(tasaDiaria*100).toFixed(3)+"%",
+                                interest:this.formatearIntereses(intereses)
                             };
                         } else if (fechaFinal >= fechaInicioColumna && fechaFinal <= fechaFinColumna) {
                             dias = Math.ceil((fechaFinal - fechaInicioColumna) / (1000 * 60 * 60 * 24) + 1);
                             tasaEfectiva=(parseFloat(row[2].replace(",","."))/100);
                             tasaNominal=(((1+tasaEfectiva)**(1/12)-1)*12);
-                            tasaDiaria=(tasaNominal/360)
+                            tasaDiaria=(tasaNominal/360);
+                           
+                    intereses=(parseInt(this.capital.replace(/,/g, ''))*tasaDiaria*dias);
                             return {
                                 date: this.convertirFechaLargaAFormatoCorto(fechaInicioColumna),
                                 value: this.convertirFechaLargaAFormatoCorto(fechaFinal),
                                 days: dias,
                                 rate:(tasaEfectiva*100).toFixed(3)+"%",
                                 rateN:(tasaNominal*100).toFixed(3)+"%",
-                                rateD:(tasaDiaria*100).toFixed(3)+"%"
+                                rateD:(tasaDiaria*100).toFixed(3)+"%",
+                                interest:this.formatearIntereses(intereses)
                             };
                         } else {
                             dias = Math.ceil((fechaFinColumna - fechaInicioColumna) / (1000 * 60 * 60 * 24)+ 1);
                             tasaEfectiva=(parseFloat(row[2].replace(",","."))/100);
                             tasaNominal=(((1+tasaEfectiva)**(1/12)-1)*12);
-                            tasaDiaria=(tasaNominal/360)
+                            tasaDiaria=(tasaNominal/360);
+                            
+                    intereses=(parseInt(this.capital.replace(/,/g, ''))*tasaDiaria*dias);
                             return {
                                 date: this.convertirFechaLargaAFormatoCorto(fechaInicioColumna),
                                 value: row[1],
                                 days: dias,
                                 rate:(tasaEfectiva*100).toFixed(3)+"%",
                                 rateN:(tasaNominal*100).toFixed(3)+"%",
-                                rateD:(tasaDiaria*100).toFixed(3)+"%"
+                                rateD:(tasaDiaria*100).toFixed(3)+"%",
+                                interest:this.formatearIntereses(intereses)
                             };
                         }
                     });
+                    // Actualiza los totales después de procesar las tasas
+                this.actualizarTotales();
                 }
             } catch (error) {
                 console.error('Error al obtener tasas:', error);
