@@ -1,3 +1,6 @@
+if (localStorage.getItem('auth') !== 'true') {
+    window.location.href = 'login.html'; // Redirigir al login si no está autenticado
+};
 Vue.filter('formatoMoneda', function(valor) {
     if (!valor) return '0.00';
 
@@ -238,8 +241,9 @@ new Vue({
                         }
                     });
                     // Actualiza los totales después de procesar las tasas
-                this.actualizarTotales();
+                
                 }
+                this.actualizarTotales();
             } catch (error) {
                 console.error('Error al obtener tasas:', error);
                 alert('Error al obtener tasas. Inténtalo de nuevo más tarde.');
@@ -308,3 +312,33 @@ new Vue({
         
     }
 });
+
+    // Tiempo de inactividad en milisegundos
+    const tiempoInactividad = 900000; // 5 segundos
+    let timeout;
+
+    // Función para cerrar la sesión
+    function cerrarSesion() {
+        alert('Tu sesión ha expirado por inactividad.');
+        localStorage.removeItem('auth'); // Elimina la autenticación
+        window.location.href = 'login.html'; // Redirige al login
+    }
+
+    // Restablecer el temporizador cuando haya actividad
+    function resetearTiempo() {
+        clearTimeout(timeout); // Limpia el temporizador anterior
+        timeout = setTimeout(cerrarSesion, tiempoInactividad); // Reinicia el temporizador
+    }
+
+    // Escuchar eventos del usuario
+    window.onload = resetearTiempo; // Cuando se carga la página
+    document.onmousemove = resetearTiempo; // Movimiento del mouse
+    document.onkeydown = resetearTiempo; // Teclas presionadas
+    document.ontouchstart = resetearTiempo; // Toques en pantalla táctil
+
+// Función para cerrar sesión
+function cerrarSesion() {
+    alert('Has cerrado sesión exitosamente.');
+    localStorage.removeItem('auth'); // Eliminar autenticación
+    window.location.href = 'login.html'; // Redirigir al login
+}
