@@ -4,64 +4,98 @@ body {
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #ffffff; /* Fondo blanco para elegancia */
-    color: #333; /* Texto base gris oscuro */
+    background: linear-gradient(135deg, #1e1e2f, #343464); /* Fondo degradado espacial */
+    color: #ffffff; /* Texto blanco para contraste */
+    min-height: 100vh;
+    background-attachment: fixed; /* Efecto inmersivo */
 }
 
 h1 {
     text-align: center;
     margin-top: 20px;
-    color: #3e3eb1; /* Navy corporativo */
+    color: #ff8000; /* Naranja vibrante para resaltar el título */
+    font-size: 28px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+}
+
+/* Form Wrapper */
+form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 15px; /* Espacio entre inputs */
+    margin: 20px auto;
+    max-width: 900px;
+    padding: 15px;
+    background-color: rgba(50, 50, 70, 0.9); /* Fondo oscuro semi-transparente */
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
 
 /* Form Inputs and Buttons */
 label {
     font-weight: bold;
-    margin-right: 10px;
-    color: #333; /* Texto elegante */
+    color: #ff8000; /* Naranja espacial para etiquetas */
+    display: block;
+    width: 100%; /* Asegurar alineación correcta */
+    text-align: left;
 }
 
 input[type="date"], 
 input[type="text"] {
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
+    padding: 12px;
+    border: none;
     border-radius: 5px;
-    width: calc(100% - 22px);
+    width: 100%; /* Asegurar que se ajuste al contenedor */
     max-width: 400px;
     font-size: 16px;
+    background-color: #252540; /* Fondo oscuro espacial */
+    color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    outline: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="date"]:focus, 
+input[type="text"]:focus {
+    transform: scale(1.05); /* Efecto de enfoque */
+    box-shadow: 0 0 8px rgba(255, 128, 0, 0.8); /* Naranja resplandeciente */
 }
 
 button {
-    padding: 10px 20px;
-    margin: 10px 5px;
+    padding: 12px 25px;
+    margin: 10px 0;
     border: none;
-    border-radius: 5px;
-    background-color: #ff8000; /* Botón naranja */
+    border-radius: 25px;
+    background: linear-gradient(45deg, #ff8000, #ff4d00); /* Naranja degradado */
     color: white;
     font-size: 16px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 button:hover {
-    background-color: #e67300; /* Tono más oscuro para hover */
+    transform: translateY(-2px); /* Efecto de levantar */
+    box-shadow: 0 4px 10px rgba(255, 128, 0, 0.6); /* Brillo */
 }
 
 button:disabled {
-    background-color: #95a5a6; /* Gris claro para botones deshabilitados */
+    background: #555; /* Gris oscuro para botones deshabilitados */
     cursor: not-allowed;
 }
 
 /* Table Styling */
 table {
-    width: 100%;
-    max-width: 900px;
+    width: 90%;
+    max-width: 1000px;
     margin: 20px auto;
     border-collapse: collapse;
-    background-color: #ffffff; /* Fondo blanco para profesionalismo */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
+    background-color: rgba(50, 50, 70, 0.9); /* Fondo oscuro semi-transparente */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
     overflow: hidden;
 }
 
@@ -73,62 +107,65 @@ thead {
 thead th {
     padding: 12px;
     text-align: left;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
+    border-bottom: 2px solid #555;
 }
 
 tbody td {
     padding: 10px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid #555;
     font-size: 14px;
+    color: #ddd; /* Texto claro */
 }
 
 tbody tr:nth-child(even) {
-    background-color: #f4f4f4; /* Gris claro para filas alternas */
+    background-color: rgba(40, 40, 60, 0.8); /* Alternancia sutil */
 }
 
-/* Totals Row */
 tbody tr:last-child td {
     font-weight: bold;
-    background-color: #e0f7f4; /* Color menta suave para destacar totales */
-    color: #333;
+    background-color: #ff8000; /* Naranja para totales */
+    color: #fff;
+    text-align: right;
 }
 
 /* Responsive Table for Mobile */
 @media (max-width: 768px) {
     table {
+        margin: 15px;
         border: 0;
     }
 
     thead {
-        display: none; /* Ocultar encabezado en móvil */
+        display: none; /* Ocultar encabezado en móviles */
     }
 
     tbody tr {
         display: block;
         margin-bottom: 15px;
-        background-color: #ffffff;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        border-radius: 5px;
+        background-color: rgba(50, 50, 70, 0.9); /* Fondo oscuro semi-transparente */
+        border-radius: 8px;
+        padding: 10px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
     }
 
     tbody td {
-        display: block;
-        text-align: right;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+        padding: 10px;
         font-size: 14px;
-        border-bottom: 1px solid #ddd;
-        padding: 8px;
-        position: relative;
+        border-bottom: 1px solid #555;
     }
 
     tbody td::before {
         content: attr(data-label);
-        position: absolute;
-        left: 10px;
+        flex: 0 0 40%;
         font-weight: bold;
-        text-align: left;
-        color: #3e3eb1; /* Navy corporativo para etiquetas */
+        color: #ff8000; /* Naranja espacial */
     }
 
     tbody td:last-child {
@@ -140,5 +177,9 @@ tbody tr:last-child td {
 #app {
     width: 90%;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 20px auto;
+    padding: 20px;
+    background: rgba(30, 30, 50, 0.9); /* Fondo semi-transparente estilo galaxia */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }

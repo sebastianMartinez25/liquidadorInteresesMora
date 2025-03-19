@@ -48,30 +48,31 @@
             </thead>
             <tbody>
                 <tr v-for="rate in rates" :key="rate.date">
-                    <td>{{ rate.date }}</td>
-                    <td>{{ rate.value }}</td>
-                    <td>{{ rate.days }}</td>
-                    <td>{{ rate.rate }}</td>
-                    <td>{{ rate.rateN }}</td>
-                    <td>{{ rate.rateD }}</td>
-                    <td>{{ rate.interest }}</td>
+                    <td data-label="Fecha I">{{ rate.date }}</td>
+                    <td data-label="Fecha F">{{ rate.value }}</td>
+                    <td data-label="Días">{{ rate.days }}</td>
+                    <td data-label="Tasa E.A.">{{ rate.rate }}</td>
+                    <td data-label="Tasa Nominal">{{ rate.rateN }}</td>
+                    <td data-label="Tasa Diaria">{{ rate.rateD }}</td>
+                    <td data-label="Intereses">{{ rate.interest }}</td>
                 </tr>
-              <!-- Fila para el total del capital -->
-        <tr>
-            <td colspan="5" style="font-weight: bold; text-align: right;">Total Capital:</td>
-            <td colspan="2">{{ capital }}</td>
-        </tr>
-        <!-- Fila para el total de intereses -->
-        <tr>
-            <td colspan="5" style="font-weight: bold; text-align: right;">Total Intereses:</td>
-            <td colspan="2">{{ totalIntereses | formatoMoneda }}</td>
-        </tr>
-        <!-- Fila para la deuda total -->
-        <tr>
-            <td colspan="5" style="font-weight: bold; text-align: right;">Deuda Total:</td>
-            <td colspan="2">{{ totalCapital | formatoMoneda }}</td>
-        </tr>
+                <!-- Fila para el total del capital -->
+                <tr>
+                    <td colspan="5" style="font-weight: bold; text-align: right;" data-label="Total Capital">Total Capital:</td>
+                    <td colspan="2">{{ capital }}</td>
+                </tr>
+                <!-- Fila para el total de intereses -->
+                <tr>
+                    <td colspan="5" style="font-weight: bold; text-align: right;" data-label="Total Intereses">Total Intereses:</td>
+                    <td colspan="2">{{ totalIntereses | formatoMoneda }}</td>
+                </tr>
+                <!-- Fila para la deuda total -->
+                <tr>
+                    <td colspan="5" style="font-weight: bold; text-align: right;" data-label="Deuda Total">Deuda Total:</td>
+                    <td colspan="2">{{ totalCapital | formatoMoneda }}</td>
+                </tr>
             </tbody>
+            
         </table>
         
 
