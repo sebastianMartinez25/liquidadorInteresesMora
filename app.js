@@ -78,6 +78,8 @@ new Vue({
         }).format(numero);
     },
     actualizarTotales() {
+        // Calcula el capital inicial
+        this.capital = this.capital;
         // Calcula el total de intereses
         this.totalIntereses = this.rates.reduce((sum, rate) => sum + parseFloat(rate.interest.replace(/,/g, '')), 0);
     
@@ -242,6 +244,67 @@ new Vue({
                 console.error('Error al obtener tasas:', error);
                 alert('Error al obtener tasas. Inténtalo de nuevo más tarde.');
             }
-        }
+        },
+        descargarExcel() {
+            // Crear un libro y una hoja de trabajo
+            const workbook = XLSX.utils.book_new();
+            const datosTabla = this.rates.map(rate => ({
+                'Fecha Inicial': rate.date,
+                'Fecha Final': rate.value,
+                'Días': rate.days,
+                'Tasa E.A.': rate.rate,
+                'Tasa Nominal': rate.rateN,
+                'Tasa Diaria': rate.rateD,
+                'Intereses': rate.interest
+            }));
+        
+            // Añadir fila para los totales formateados
+            datosTabla.push(
+                { 
+                    'Fecha Inicial': '', 
+                    'Fecha Final': '', 
+                    'Días': '', 
+                    'Tasa E.A.': '', 
+                    'Tasa Nominal': '', 
+                    'Tasa Diaria': 'Total Capital:', 
+                    'Intereses': this.capital
+                },
+                { 
+                    'Fecha Inicial': '', 
+                    'Fecha Final': '', 
+                    'Días': '', 
+                    'Tasa E.A.': '', 
+                    'Tasa Nominal': '', 
+                    'Tasa Diaria': 'Total Intereses:', 
+                    'Intereses': new Intl.NumberFormat('en-US', { 
+                        style: 'decimal', 
+                        minimumFractionDigits: 2, 
+                        maximumFractionDigits: 2 
+                    }).format(this.totalIntereses)
+                },
+                { 
+                    'Fecha Inicial': '', 
+                    'Fecha Final': '', 
+                    'Días': '', 
+                    'Tasa E.A.': '', 
+                    'Tasa Nominal': '', 
+                    'Tasa Diaria': 'Deuda Total:', 
+                    'Intereses': new Intl.NumberFormat('en-US', { 
+                        style: 'decimal', 
+                        minimumFractionDigits: 2, 
+                        maximumFractionDigits: 2 
+                    }).format(this.totalCapital)
+                }
+            );
+        
+            const hojaTrabajo = XLSX.utils.json_to_sheet(datosTabla);
+        
+            // Agregar hoja al libro
+            XLSX.utils.book_append_sheet(workbook, hojaTrabajo, "Tasas");
+        
+            // Exportar el archivo Excel
+            XLSX.writeFile(workbook, "Tasas_Por_Mes.xlsx");
+        },        
+        
     }
 });

@@ -1,0 +1,144 @@
+/* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff; /* Fondo blanco para elegancia */
+    color: #333; /* Texto base gris oscuro */
+}
+
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #3e3eb1; /* Navy corporativo */
+}
+
+/* Form Inputs and Buttons */
+label {
+    font-weight: bold;
+    margin-right: 10px;
+    color: #333; /* Texto elegante */
+}
+
+input[type="date"], 
+input[type="text"] {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: calc(100% - 22px);
+    max-width: 400px;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px 5px;
+    border: none;
+    border-radius: 5px;
+    background-color: #ff8000; /* Botón naranja */
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #e67300; /* Tono más oscuro para hover */
+}
+
+button:disabled {
+    background-color: #95a5a6; /* Gris claro para botones deshabilitados */
+    cursor: not-allowed;
+}
+
+/* Table Styling */
+table {
+    width: 100%;
+    max-width: 900px;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #ffffff; /* Fondo blanco para profesionalismo */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+thead {
+    background-color: #3e3eb1; /* Navy corporativo */
+    color: white;
+}
+
+thead th {
+    padding: 12px;
+    text-align: left;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+tbody td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f4f4f4; /* Gris claro para filas alternas */
+}
+
+/* Totals Row */
+tbody tr:last-child td {
+    font-weight: bold;
+    background-color: #e0f7f4; /* Color menta suave para destacar totales */
+    color: #333;
+}
+
+/* Responsive Table for Mobile */
+@media (max-width: 768px) {
+    table {
+        border: 0;
+    }
+
+    thead {
+        display: none; /* Ocultar encabezado en móvil */
+    }
+
+    tbody tr {
+        display: block;
+        margin-bottom: 15px;
+        background-color: #ffffff;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+    }
+
+    tbody td {
+        display: block;
+        text-align: right;
+        font-size: 14px;
+        border-bottom: 1px solid #ddd;
+        padding: 8px;
+        position: relative;
+    }
+
+    tbody td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 10px;
+        font-weight: bold;
+        text-align: left;
+        color: #3e3eb1; /* Navy corporativo para etiquetas */
+    }
+
+    tbody td:last-child {
+        border-bottom: 0;
+    }
+}
+
+/* Wrapper for Responsiveness */
+#app {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}

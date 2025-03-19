@@ -3,13 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tasas por Mes</title>
+    <title>Liquidador de intereses de mora</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <link rel="stylesheet" href="styles.css">
+
+
 </head>
 <body>
     <div id="app">
-        <h1>Tasas por Mes</h1>
+        <h1>Liquidador Judicial</h1>
         <label for="startDate">Fecha Inicial:</label>
         <input type="date" id="startDate" v-model="startDate">
         <label for="endDate">Fecha Final:</label>
@@ -29,6 +33,7 @@
 
         
         <button @click="liquidar">Liquidar</button>
+        <button @click="descargarExcel" :disabled="!rates.length">Descargar Excel</button>
         <table>
             <thead>
                 <tr>
@@ -51,18 +56,25 @@
                     <td>{{ rate.rateD }}</td>
                     <td>{{ rate.interest }}</td>
                 </tr>
-                <!-- Fila para el total del capital -->
-    <tr>
-        <td colspan="5" style="font-weight: bold; text-align: right;">Total:</td>
-        <td colspan="2">{{ totalCapital | formatoMoneda }}</td>
-    </tr>
-    <!-- Fila para el total de intereses -->
-    <tr>
-        <td colspan="5" style="font-weight: bold; text-align: right;">Total Intereses:</td>
-        <td colspan="2">{{ totalIntereses | formatoMoneda }}</td>
-    </tr>
+              <!-- Fila para el total del capital -->
+        <tr>
+            <td colspan="5" style="font-weight: bold; text-align: right;">Total Capital:</td>
+            <td colspan="2">{{ capital }}</td>
+        </tr>
+        <!-- Fila para el total de intereses -->
+        <tr>
+            <td colspan="5" style="font-weight: bold; text-align: right;">Total Intereses:</td>
+            <td colspan="2">{{ totalIntereses | formatoMoneda }}</td>
+        </tr>
+        <!-- Fila para la deuda total -->
+        <tr>
+            <td colspan="5" style="font-weight: bold; text-align: right;">Deuda Total:</td>
+            <td colspan="2">{{ totalCapital | formatoMoneda }}</td>
+        </tr>
             </tbody>
         </table>
+        
+
     </div>
     <script src="app.js"></script>
 </body>
