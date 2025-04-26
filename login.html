@@ -141,6 +141,7 @@ input:focus {
                     const gid = '644205970'; // GID de la hoja "users"
                     const today = new Date();
                     const todayFormatted = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+                    const timeFormatted = today.toTimeString().split(' ')[0];
 
                     try {
                         // Obtener los datos de la hoja "users"
@@ -172,7 +173,24 @@ input:focus {
                     const fechaU = new Date(añoU, mesU - 1, diaU);
                     const fechaA = new Date(añoA, mesA - 1, diaA);
                     return fechaU >= fechaA;
-                }
+                },
+                async registrarSesion(correo, fecha, hora, tipo) {
+                    const backendURL = 'https://liquidador-intereses-mora-b4r31z34f.vercel.app/api/registrarSesion';
+
+
+      try {
+        await axios.post(backendURL, {
+          correo: correo,
+          fecha: todayFormatted,
+          hora: timeFormatted,
+          tipo: "Loggin"
+        });
+        console.log('Sesión registrada correctamente.');
+      } catch (error) {
+        console.error('Error al registrar sesión:', error);
+        alert('No se pudo registrar la sesión en Google Sheets.');
+      }
+    }
             }
         });
     </script>
