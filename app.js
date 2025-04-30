@@ -318,9 +318,13 @@ new Vue({
     let timeout;
 
     // Función para cerrar la sesión
-    function cerrarSesion() {
+   async function cerrarSesion() {
+        const email = localStorage.getItem('userEmail') || 'desconocido';
+  // Log de fin de sesión
+  await logSessionEvent(email, 'FIN_SESION', 'index.html');
         alert('Tu sesión ha expirado por inactividad.');
         localStorage.removeItem('auth'); // Elimina la autenticación
+        localStorage.removeItem('userEmail');
         window.location.href = 'login.html'; // Redirige al login
     }
 
@@ -337,8 +341,8 @@ new Vue({
     document.ontouchstart = resetearTiempo; // Toques en pantalla táctil
 
 // Función para cerrar sesión
-function cerrarSesion() {
+/*function cerrarSesion() {
     alert('Has cerrado sesión exitosamente.');
     localStorage.removeItem('auth'); // Eliminar autenticación
     window.location.href = 'login.html'; // Redirigir al login
-}
+}*/

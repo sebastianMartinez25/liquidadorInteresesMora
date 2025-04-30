@@ -6,6 +6,8 @@
     <title>Inicio de Sesión</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="utils.js"></script>
+
     <link rel="stylesheet" href="styles.css">
     <style>
         /* Estilo específico para el login */
@@ -154,8 +156,13 @@ input:focus {
                         });
 
                         if (user) {
+                            
+                            
                             // Credenciales válidas, redirigir al index.html
                             localStorage.setItem('auth', 'true'); // Almacenar autenticación
+                            //nuevo
+                            localStorage.setItem('userEmail', this.correo); 
+                            await logSessionEvent(this.correo, 'INICIO_SESION', 'login.html');
                             window.location.href = 'index.html';
                         } else {
                             this.error = 'Correo no válido o fecha expirada.';
