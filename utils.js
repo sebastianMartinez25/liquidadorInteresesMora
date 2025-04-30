@@ -5,13 +5,24 @@ function logSessionEvent(email, tipo, zona) {
   const fecha = now.toLocaleDateString('es-CO');    // ej. "29/04/2025"
   const hora  = now.toLocaleTimeString('es-CO');    // ej. "14:35:07"
   const dispositivo = navigator.userAgent;
+  
+  
+
+  
+  
 
   return fetch(LOG_ENDPOINT, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json;charset=utf-8' },
+    headers: {  'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify({ email, fecha, hora, tipo, dispositivo, zona })
   })
-  .then(r => r.json())
-  .then(console.log)
-  .catch(console.error);
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+    alert('Datos enviados correctamente');
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+    alert('Hubo un error al enviar los datos');
+  });
 }

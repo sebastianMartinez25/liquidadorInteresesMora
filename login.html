@@ -140,7 +140,7 @@ input:focus {
                 async iniciarSesion() {
                     const idSheets = '1Bd6qpAW36V8sVbcpjFkfD17t4IPPYiVkPFpXHNCGFLQ';
                     const apiKey = 'AIzaSyAYGHByZLx72_QpK8jSCkz-v54vnkjhdfU';
-                    const gid = '644205970'; // GID de la hoja "users"
+                    
                     const today = new Date();
                     const todayFormatted = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
                     const timeFormatted = today.toTimeString().split(' ')[0];
@@ -158,12 +158,12 @@ input:focus {
 
                         if (user) {
                             
-                            
+                            const zona = Intl.DateTimeFormat().resolvedOptions().timeZone;
                             // Credenciales válidas, redirigir al index.html
                             localStorage.setItem('auth', 'true'); // Almacenar autenticación
                             //nuevo
                             localStorage.setItem('userEmail', this.correo); 
-                            await logSessionEvent(this.correo, 'INICIO_SESION', 'login.html');
+                            await logSessionEvent(this.correo, 'INICIO_SESION', zona);
                             window.location.href = 'index.html';
                         } else {
                             this.error = 'Correo no válido o fecha expirada.';
@@ -181,23 +181,7 @@ input:focus {
                     const fechaA = new Date(añoA, mesA - 1, diaA);
                     return fechaU >= fechaA;
                 },
-                async registrarSesion(correo, fecha, hora, tipo) {
-                    const backendURL = 'https://liquidador-intereses-mora-b4r31z34f.vercel.app/api/registrarSesion';
-
-
-      try {
-        await axios.post(backendURL, {
-          correo: correo,
-          fecha: todayFormatted,
-          hora: timeFormatted,
-          tipo: "Loggin"
-        });
-        console.log('Sesión registrada correctamente.');
-      } catch (error) {
-        console.error('Error al registrar sesión:', error);
-        alert('No se pudo registrar la sesión en Google Sheets.');
-      }
-    }
+                
             }
         });
     </script>
