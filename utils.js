@@ -19,10 +19,10 @@ function logSessionEvent(email, tipo, zona) {
   .then(response => response.json())
   .then(data => {
     console.log('Success:', data);
-    alert('Datos enviados correctamente');
+    /*alert('Datos enviados correctamente');*/
   })
   .catch((error) => {
     console.error('Error:', error);
-    alert('Hubo un error al enviar los datos');
+   /* alert('Hubo un error al enviar los datos');*/
   });
 }

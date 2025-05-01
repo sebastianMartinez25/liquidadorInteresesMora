@@ -219,3 +219,54 @@ tbody tr:last-child td {
     box-shadow: 0 0 10px rgba(255, 128, 0, 0.8); /* Brillo al enfocar */
 }
 
+/* ojito de password*/
+.password-wrapper {
+  position: relative;
+}
+
+.password-wrapper input {
+  width: 100%;
+  padding-right: 2.5rem; /* Espacio para el ícono */
+}
+
+.eye-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  stroke: #ff8000;
+  transition: stroke 0.3s ease;
+}
+
+.eye-icon:hover {
+  stroke: #ffffff;
+}
+
+
+/*spinner */
+.loader-container-overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(30,30,47,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    border-radius: 15px;
+  }
+  
+  .spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #ffffff33;
+    border-top-color: #ff8000;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  

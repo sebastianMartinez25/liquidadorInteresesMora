@@ -119,71 +119,150 @@ input:focus {
     </style>
 </head>
 <body>
+   
+  <!-- App principal -->
     <div id="loginApp">
-        <h1>Inicio de Sesión</h1>
         <form @submit.prevent="iniciarSesion">
-            <label for="correo">Correo Electrónico:</label>
-            <input type="email" id="correo" v-model="correo" placeholder="Ingresa tu correo" required>
-            <button type="submit">Iniciar Sesión</button>
-        </form>
-        <p v-if="error">{{ error }}</p>
-    </div>
+            <!-- Campo Correo -->
+            <div class="input-group">
+              <label for="correo">Correo Electrónico</label>
+              <input type="email" id="correo" v-model="correo"
+                     required placeholder="tucorreo@ejemplo.com" />
+            </div>
+          
+            <!-- Nuevo campo Contraseña con ojo -->
+            <div class="input-group password-group">
+              <label for="password">Contraseña</label>
+              <div class="password-wrapper">
+                <input :type="showPassword ? 'text' : 'password'"
+                       id="password" v-model="password"
+                       required minlength="5"
+                       placeholder="Mínimo 5 caracteres" />
+<!-- SVG del ojito -->
+    <svg @click="showPassword = !showPassword"
+         xmlns="http://www.w3.org/2000/svg"
+         class="eye-icon"
+         width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <!-- Ícono de "ver" -->
+      <path v-if="showPassword"
+            stroke="#ff8000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            d="M1.5 12S5.5 4.5 12 4.5s10.5 7.5 10.5 7.5-4.5 7.5-10.5 7.5S1.5 12 1.5 12z" />
+      <circle v-if="showPassword"
+              cx="12" cy="12" r="3.5"
+              stroke="#ff8000" stroke-width="2" />
+      <!-- Ícono de "no ver" -->
+      <path v-else
+            stroke="#ff8000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            d="M1 1l22 22M10.585 10.585a3 3 0 104.83 4.83M5.635 5.635A11.958 11.958 0 0112 4c5.523 0 10.216 3.738 11.316 8.5a11.952 11.952 0 01-3.073 5.316" />
+    </svg>
+               
+              </div>
+            </div>
+          
+            <!-- Botón Ingresar -->
+            <button type="submit">Ingresar</button>
+          </form>
+          
+          <!-- Mensaje de error en rojo -->
+          <p v-if="error" class="error">{{ error }}</p>
+          
+          <!-- Enlace Crear Cuenta -->
+          <div class="footer">
+            ¿No tienes cuenta? <a href="crear-usuario.html">Crear una cuenta</a>
+          </div>
+          <!--- spinner-->
+          <div v-if="loading" class="loader-container-overlay">
+            <div class="spinner"></div>
+          </div>
+               
+      </div>
+
 
     <script>
         new Vue({
             el: '#loginApp',
             data: {
                 correo: '',
-                error: ''
+                password: '',
+                showPassword: false,  // controla el ojo
+                error: '',
+                loading:false,
+                zona: Intl.DateTimeFormat().resolvedOptions().timeZone  // Bogotá, por ejemplo
             },
             methods: {
                 async iniciarSesion() {
+                    this.error = '';
+                    this.loading=true;
+                    if (!this.correo || this.password.length < 5) {
+      this.error = 'Correo y contraseña (mín. 5 caracteres).';
+      return;
+    }
                     const idSheets = '1Bd6qpAW36V8sVbcpjFkfD17t4IPPYiVkPFpXHNCGFLQ';
                     const apiKey = 'AIzaSyAYGHByZLx72_QpK8jSCkz-v54vnkjhdfU';
                     
                     const today = new Date();
-                    const todayFormatted = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
-                    const timeFormatted = today.toTimeString().split(' ')[0];
+
+                    /*const todayFormatted = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+                    const timeFormatted = today.toTimeString().split(' ')[0];*/
 
                     try {
-                        // Obtener los datos de la hoja "users"
-                        const response = await axios.get(`https://sheets.googleapis.com/v4/spreadsheets/${idSheets}/values/Users!A2:E1000?key=${apiKey}`);
-                        const data = response.data.values;
+      // 1) Leer Users!D2:F para email y password
+      const { values: users } = (await axios.get(
+        `https://sheets.googleapis.com/v4/spreadsheets/${idSheets}/values/users!D2:F1000?key=${apiKey}`
+      )).data;
 
-                        // Buscar el correo y validar la fecha (formato día/mes/año)
-                        const user = data.find(row => {
-                            const fechaUsuario = row[2]; // Columna de la fecha (C)
-                            return row[0] === this.correo && this.compararFechas(fechaUsuario, todayFormatted);
-                        });
+      const userRow = users.find(r => r[0] === this.correo && r[2] === this.password);
+      if (!userRow) {
+        this.error = 'Correo o contraseña incorrectos.';
+        return;
+      }
 
-                        if (user) {
-                            
-                            const zona = Intl.DateTimeFormat().resolvedOptions().timeZone;
-                            // Credenciales válidas, redirigir al index.html
-                            localStorage.setItem('auth', 'true'); // Almacenar autenticación
-                            //nuevo
-                            localStorage.setItem('userEmail', this.correo); 
-                            await logSessionEvent(this.correo, 'INICIO_SESION', zona);
-                            window.location.href = 'index.html';
-                        } else {
-                            this.error = 'Correo no válido o fecha expirada.';
-                            localStorage.setItem('auth', 'false'); // Reiniciar autenticación
-                        }
-                    } catch (error) {
-                        console.error('Error al validar el login:', error);
-                        this.error = 'Hubo un problema al validar las credenciales.';
-                    }
+      // 2) Leer Suscripcion!C2:E para validar fecha final
+      const { values: subs } = (await axios.get(
+        `https://sheets.googleapis.com/v4/spreadsheets/${idSheets}/values/suscripcion!C2:E1000?key=${apiKey}`
+      )).data;
+
+      const valid = subs.some(r => {
+        if (r[0] !== this.correo) return false;
+        const [d,m,y] = r[2].split('/').map(Number);
+        return new Date(y, m-1, d) >= today;
+      });
+      if (!valid) {
+        this.error = 'No tienes una suscripción activa.';
+        return;
+      }
+
+      // TODO: autenticar, guardar localStorage, logSessionEvent...
+      localStorage.setItem('auth', 'true');
+      localStorage.setItem('userEmail', this.correo);
+      // Registra el evento de inicio de sesión
+await logSessionEvent(this.correo, 'INICIO_SESION', this.zona);
+      // redirige donde gustes tras login
+      window.location.href = 'index.html';
+
+    } catch (e) {
+      console.error(e);
+      this.error = 'Error al conectar con el servidor.';
+    }
+    finally{
+        this.loading=false; // <-- ocultar spinner SIEMPRE, éxito o error
+    }
+
                 },
-                compararFechas(fechaUsuario, fechaActual) {
+                /*compararFechas(fechaUsuario, fechaActual) {
                     const [diaU, mesU, añoU] = fechaUsuario.split('/').map(Number);
                     const [diaA, mesA, añoA] = fechaActual.split('/').map(Number);
                     const fechaU = new Date(añoU, mesU - 1, diaU);
                     const fechaA = new Date(añoA, mesA - 1, diaA);
                     return fechaU >= fechaA;
-                },
+                },*/
                 
+
             }
         });
+   
     </script>
+
+    
 </body>
 </html>
