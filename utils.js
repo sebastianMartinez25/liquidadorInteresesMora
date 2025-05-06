@@ -14,7 +14,9 @@ function logSessionEvent(email, tipo, zona) {
   return fetch(LOG_ENDPOINT, {
     method: 'POST',
     headers: {  'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify({ email, fecha, hora, tipo, dispositivo, zona })
+    body: JSON.stringify({ 
+      action: 'log_session',
+      email, fecha, hora, tipo, dispositivo, zona })
   })
   .then(response => response.json())
   .then(data => {

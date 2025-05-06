@@ -221,7 +221,10 @@ tbody tr:last-child td {
 
 /* ojito de password*/
 .password-wrapper {
-  position: relative;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch; /* inputs siguen 100% ancho */
 }
 
 .password-wrapper input {
@@ -269,4 +272,33 @@ tbody tr:last-child td {
   @keyframes spin {
     to { transform: rotate(360deg); }
   }
+/*wizzard*/
+  .input-group {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
   
+  .input-group input {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    background: #252540;
+    color: #ffffff;
+    font-size: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+  }
+  
+  .input-group input:focus {
+    transform: scale(1.02);
+    box-shadow: 0 0 10px rgba(255, 128, 0, 0.8);
+  }
+  /*errores*/
+  .field-error {
+    color: #ff4d4f;
+    font-size: 12px;
+    margin-top: 4px;
+  }
