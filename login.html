@@ -139,22 +139,9 @@ input:focus {
                        required minlength="5"
                        placeholder="Mínimo 5 caracteres" />
 <!-- SVG del ojito -->
-    <svg @click="showPassword = !showPassword"
-         xmlns="http://www.w3.org/2000/svg"
-         class="eye-icon"
-         width="24" height="24" viewBox="0 0 24 24" fill="none">
-      <!-- Ícono de "ver" -->
-      <path v-if="showPassword"
-            stroke="#ff8000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            d="M1.5 12S5.5 4.5 12 4.5s10.5 7.5 10.5 7.5-4.5 7.5-10.5 7.5S1.5 12 1.5 12z" />
-      <circle v-if="showPassword"
-              cx="12" cy="12" r="3.5"
-              stroke="#ff8000" stroke-width="2" />
-      <!-- Ícono de "no ver" -->
-      <path v-else
-            stroke="#ff8000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-            d="M1 1l22 22M10.585 10.585a3 3 0 104.83 4.83M5.635 5.635A11.958 11.958 0 0112 4c5.523 0 10.216 3.738 11.316 8.5a11.952 11.952 0 01-3.073 5.316" />
-    </svg>
+<span class="toggle-password" @click="showPassword = !showPassword">
+  <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+</span> 
                
               </div>
             </div>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Suscripción | Checkout Pro</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 2rem;
+      background-color: rgba(40, 40, 60, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    }
+    h1 {
+      text-align: center;
+      color: #ff8000;
+      margin-bottom: 2rem;
+    }
+    .plans {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    .plan-card {
+      padding: 1.5rem;
+      border-radius: 10px;
+      background: #252540;
+      color: white;
+      text-align: center;
+      border: 2px solid transparent;
+      transition: all 0.3s ease;
+    }
+    .plan-card:hover {
+      border-color: #ff8000;
+      transform: scale(1.02);
+    }
+    .plan-card button {
+      margin-top: 1rem;
+      width: 100%;
+    }
+    @media (min-width: 600px) {
+      .plans {
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      .plan-card {
+        width: 48%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Elige tu plan</h1>
+    <div class="plans">
+      <div class="plan-card">
+        <h2>Mensual</h2>
+        <p>$100 COP / mes</p>
+        <button onclick="suscribirse('mensual')">Suscribirme</button>
+      </div>
+      <div class="plan-card">
+        <h2>Anual</h2>
+        <p>$1.000 COP / año</p>
+        <button onclick="suscribirse('anual')">Suscribirme</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const correo = localStorage.getItem('correoPago');
+    if (!correo) {
+      alert('No se encontró el correo. Volviendo atrás...');
+      window.history.back();
+    }
+
+    async function suscribirse(plan) {
+      try {
+        const res = await fetch('https://script.google.com/macros/s/AKfycbxMtt6eP3JErCTukrkIjCl4u9yEJ5E5Aa19pYIewRRNlnhnvLXjLvi_PaPr2q7jb88Z/exec', {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'crear_preferencia', correo, plan })
+        });
+
+        const data = await res.json();
+        if (data.init_point) {
+          window.location.href = data.init_point;
+        } else {
+          alert('Error al obtener enlace de pago.');
+          console.error(data);
+        }
+      } catch (err) {
+        console.error(err);
+        alert('Error al conectar con el servidor.');
+      }
+    }
+  </script>
+</body>
+</html>

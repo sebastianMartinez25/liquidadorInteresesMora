@@ -187,8 +187,15 @@
             if (status !== 'success') throw new Error(message);
 
             if (existeSub) {
-              window.location.href = activa ? 'login.html' : 'pago.html';
+              if (activa) {
+  window.location.href = 'login.html';
+} else {
+  localStorage.setItem('correoPago', this.email.trim().toLowerCase());
+  window.location.href = 'pago.html';
+}
+
             } else if (existeUser) {
+              localStorage.setItem('correoPago', this.email.trim().toLowerCase());
               window.location.href = 'pago.html';
             } else {
               this.currentStep = 2;
@@ -321,6 +328,7 @@ async guardarUsuario() {
     const result = await response.json();
 
     if (result.status === 'success') {
+      localStorage.setItem('correoPago', this.email.trim().toLowerCase());
       // Redirige a pago o muestra mensaje
       window.location.href = 'pago.html';
     } else {
