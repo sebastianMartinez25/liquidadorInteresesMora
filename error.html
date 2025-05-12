@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pago Fallido</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .centered-container {
+      max-width: 600px;
+      margin: 4rem auto;
+      padding: 2rem;
+      background-color: rgba(50, 20, 20, 0.95);
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    }
+    .centered-container h1 {
+      color: #ff4d00;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .centered-container p {
+      color: #fff;
+      margin-bottom: 2rem;
+    }
+    .centered-container img {
+      max-width: 200px;
+      margin-bottom: 2rem;
+    }
+    .centered-container a {
+      display: inline-block;
+      padding: 12px 24px;
+      background: linear-gradient(45deg, #ff8000, #ff4d00);
+      color: white;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: transform 0.3s ease;
+    }
+    .centered-container a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(255, 128, 0, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <div class="centered-container">
+    <img src="https://cdn-icons-png.flaticon.com/512/564/564619.png" alt="Error" />
+    <h1>¡El pago no fue procesado!</h1>
+    <p>Ocurrió un error al procesar tu pago. Puedes intentarlo nuevamente o volver al inicio.</p>
+    <a href="pago.html">Reintentar Pago</a>
+    <br/><br/>
+    <a href="login.html">Volver al Inicio</a>
+  </div>
+</body>
+</html>

@@ -9,6 +9,8 @@
     <script src="utils.js"></script>
 
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
     <style>
         /* Estilo específico para el login */
         body {
@@ -135,16 +137,17 @@ input:focus {
               <label for="password">Contraseña</label>
               <div class="password-wrapper">
                 <input :type="showPassword ? 'text' : 'password'"
-                       id="password" v-model="password"
-                       required minlength="5"
+                       id="password"
+                       v-model="password"
+                       required
+                       minlength="5"
                        placeholder="Mínimo 5 caracteres" />
-<!-- SVG del ojito -->
-<span class="toggle-password" @click="showPassword = !showPassword">
-  <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
-</span> 
-               
+                <span class="toggle-password" @click="showPassword = !showPassword">
+                  <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                </span>
               </div>
             </div>
+            
           
             <!-- Botón Ingresar -->
             <button type="submit">Ingresar</button>

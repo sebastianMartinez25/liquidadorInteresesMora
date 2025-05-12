@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pago Pendiente</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .centered-container {
+      max-width: 600px;
+      margin: 4rem auto;
+      padding: 2rem;
+      background-color: rgba(40, 40, 60, 0.95);
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+    }
+    .centered-container h1 {
+      color: #ffaa00;
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    .centered-container p {
+      color: #fff;
+      margin-bottom: 2rem;
+    }
+    .centered-container img {
+      max-width: 200px;
+      margin-bottom: 2rem;
+    }
+    .centered-container a {
+      display: inline-block;
+      padding: 12px 24px;
+      background: linear-gradient(45deg, #ffaa00, #ff8000);
+      color: white;
+      border-radius: 25px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: transform 0.3s ease;
+    }
+    .centered-container a:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(255, 128, 0, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <div class="centered-container">
+    <img src="https://cdn-icons-png.flaticon.com/512/595/595067.png" alt="Pendiente" />
+    <h1>Tu pago está pendiente</h1>
+    <p>Estamos esperando la confirmación de tu entidad financiera.<br>Te notificaremos cuando el pago sea aprobado.</p>
+    <a href="login.html">Volver al Inicio</a>
+  </div>
+</body>
+</html>

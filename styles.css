@@ -222,30 +222,53 @@ tbody tr:last-child td {
 /* ojito de password*/
 .password-wrapper {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch; /* inputs siguen 100% ancho */
+     /* inputs siguen 100% ancho */
 }
 
 .password-wrapper input {
   width: 100%;
-  padding-right: 2.5rem; /* Espacio para el ícono */
+  padding-right: 3.0rem; /* Espacio para el ícono */
 }
 
-.eye-icon {
-  position: absolute;
-  right: 0.75rem;
-  top: 50%;
-  transform: translateY(-50%);
-  cursor: pointer;
-  stroke: #ff8000;
-  transition: stroke 0.3s ease;
-}
-
-.eye-icon:hover {
-  stroke: #ffffff;
-}
-
+.toggle-password {
+    position: absolute;
+    right: 1.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #ff8000;
+    font-size: 18px;
+    width: 24px; /* Fijar ancho */
+    height: 24px; /* Fijar alto opcional */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  
+  
+  .toggle-password:hover {
+    color: #ffffff;
+  }
+  
+  .footer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #ccc;
+    text-align: center;
+  }
+  
+  .footer a {
+    color: #ff8000;
+    font-weight: bold;
+    text-decoration: none;
+    margin-left: 5px;
+  }
+  
+  .footer a:hover {
+    text-decoration: underline;
+  }
+  
 
 /*spinner */
 .loader-container-overlay {
