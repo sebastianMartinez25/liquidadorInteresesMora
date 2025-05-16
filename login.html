@@ -151,10 +151,13 @@ input:focus {
           
             <!-- Botón Ingresar -->
             <button type="submit">Ingresar</button>
+            <!-- Dentro de #loginApp, antes de <form> -->
+<div id="toast-container" class="toast-container"></div>
+
           </form>
           
-          <!-- Mensaje de error en rojo -->
-          <p v-if="error" class="error">{{ error }}</p>
+          <!-- Mensaje de error en rojo 
+          <p v-if="error" class="error">{{ error }}</p>-->
           
           <!-- Enlace Crear Cuenta -->
           <div class="footer">
@@ -169,6 +172,16 @@ input:focus {
 
 
     <script>
+      // función global para generar un toast
+function showToast(message, type = 'info') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  // lo elimino tras 3s (0.3 in + 2.7 delay + 0.3 out)
+  setTimeout(() => container.removeChild(toast), 3300);
+}
         new Vue({
             el: '#loginApp',
             data: {
@@ -184,7 +197,7 @@ input:focus {
                     this.error = '';
                     this.loading=true;
                     if (!this.correo || this.password.length < 5) {
-      this.error = 'Correo y contraseña (mín. 5 caracteres).';
+                      showToast('Correo y contraseña (mín. 5 caracteres).', 'error');
       return;
     }
                     const idSheets = '1Bd6qpAW36V8sVbcpjFkfD17t4IPPYiVkPFpXHNCGFLQ';
@@ -203,7 +216,7 @@ input:focus {
 
       const userRow = users.find(r => r[0] === this.correo && r[2] === this.password);
       if (!userRow) {
-        this.error = 'Correo o contraseña incorrectos.';
+        showToast('Correo o contraseña incorrectos.', 'error');
         return;
       }
 
@@ -218,7 +231,7 @@ input:focus {
         return new Date(y, m-1, d) >= today;
       });
       if (!valid) {
-        this.error = 'No tienes una suscripción activa.';
+        showToast('No tienes una suscripción activa.', 'error');
         return;
       }
 
@@ -228,11 +241,13 @@ input:focus {
       // Registra el evento de inicio de sesión
 await logSessionEvent(this.correo, 'INICIO_SESION', this.zona);
       // redirige donde gustes tras login
+      showToast('¡Bienvenido!', 'success');
+
       window.location.href = 'index.html';
 
     } catch (e) {
       console.error(e);
-      this.error = 'Error al conectar con el servidor.';
+      showToast('Error al conectar con el servidor.', 'error');
     }
     finally{
         this.loading=false; // <-- ocultar spinner SIEMPRE, éxito o error

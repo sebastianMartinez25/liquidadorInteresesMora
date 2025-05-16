@@ -222,34 +222,50 @@ tbody tr:last-child td {
 /* ojito de password*/
 .password-wrapper {
     position: relative;
-     /* inputs siguen 100% ancho */
-}
-
-.password-wrapper input {
-  width: 100%;
-  padding-right: 3.0rem; /* Espacio para el ícono */
-}
-
-.toggle-password {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .password-wrapper input {
+    width: 100%;
+    padding: 12px;
+    padding-right: 2.5rem; /* espacio para el ojito */
+    border: none;
+    border-radius: 5px;
+    background-color: #252540;
+    color: #ffffff;
+    font-size: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    outline: none;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+  }
+  
+  .password-wrapper input:focus {
+    transform: scale(1.05);
+    box-shadow: 0 0 8px rgba(255, 128, 0, 0.8);
+  }
+  
+  .toggle-password {
     position: absolute;
-    right: 1.75rem;
+    right: 0.75rem;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
     color: #ff8000;
     font-size: 18px;
-    width: 24px; /* Fijar ancho */
-    height: 24px; /* Fijar alto opcional */
     display: flex;
-    justify-content: center;
     align-items: center;
-    overflow: hidden;
+    justify-content: center;
   }
-  
   
   .toggle-password:hover {
     color: #ffffff;
   }
+  
   
   .footer {
     margin-top: 20px;
@@ -303,6 +319,7 @@ tbody tr:last-child td {
   
   .input-group input {
     width: 100%;
+    max-width: 100%;
     padding: 12px;
     border: none;
     border-radius: 5px;
@@ -325,3 +342,44 @@ tbody tr:last-child td {
     font-size: 12px;
     margin-top: 4px;
   }
+
+  /* Toast container (fijo arriba-centro) */
+.toast-container {
+    position: fixed;
+    top: 1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    pointer-events: none; /* los clicks “pasan” */
+  }
+  
+  /* Toast base */
+  .toast {
+    min-width: 200px;
+    max-width: 300px;
+    padding: 0.75rem 1rem;
+    border-radius: 10px;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    opacity: 0;
+    transform: translateY(-10px);
+    animation: toast-in 0.3s forwards, toast-out 0.3s forwards 2.7s;
+  }
+  
+  /* tipologías */
+  .toast.error   { background: #e74c3c; }
+  .toast.success { background: #27ae60; }
+  .toast.info    { background: #3498db; }
+  
+  /* animaciones */
+  @keyframes toast-in {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes toast-out {
+    to { opacity: 0; transform: translateY(-10px); }
+  }
+  
