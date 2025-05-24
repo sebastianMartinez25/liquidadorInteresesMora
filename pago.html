@@ -165,13 +165,41 @@
   <div class="overlay" id="spinner">
     <div class="spinner"></div>
   </div>
+<div id="toast-container" class="toast-container"></div>
 
   <script>
     const correo = localStorage.getItem('correoPago');
     if (!correo) {
-      alert('No se encontró el correo. Redirigiendo...');
-      window.history.back();
+        localStorage.setItem('toastMessage', JSON.stringify({
+  type: 'error',
+  message: 'No se encontró el correo. Redirigiendo...'
+}));
+
+window.location.href = 'login.html';
+      
     }
+ setInterval(() => {
+    const timestamp = parseInt(localStorage.getItem('correoTimestamp'), 10);
+    const now = Date.now();
+    const maxTime = 15 * 60 * 1000; // 15 minutos
+
+    if (!timestamp || (now - timestamp) > maxTime) {
+        localStorage.removeItem('correoPago');
+        localStorage.removeItem('correoTimestamp');
+        localStorage.setItem('toastMessage', JSON.stringify({
+            type: 'info',
+            message: 'La sesión ha finalizado, vuelve a iniciar.'
+        }));
+        window.location.href = 'login.html';
+    }
+}, 60000); // verifica cada 1 minuto
+   
+const storedToast = localStorage.getItem('toastMessage');
+if (storedToast) {
+  const { type, message } = JSON.parse(storedToast);
+  showToast(message, type);
+  localStorage.removeItem('toastMessage'); // Limpia para que no se repita
+}
 
     async function suscribirse(plan) {
       document.getElementById('spinner').style.display = 'flex';
@@ -186,16 +214,27 @@
         if (data.init_point) {
           window.location.href = data.init_point;
         } else {
-          alert('Error al obtener enlace de pago.');
+          showToast('Error al obtener enlace de pago.','error');
+          
           console.error(data);
           document.getElementById('spinner').style.display = 'none';
         }
       } catch (err) {
         console.error(err);
-        alert('Error al conectar con el servidor.');
+         showToast('Error al conectar con el servidor.','error');
+      
         document.getElementById('spinner').style.display = 'none';
       }
     }
+    function showToast(message, type = 'info') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  setTimeout(() => container.removeChild(toast), 5000);
+}
+
   </script>
 </body>
 </html>

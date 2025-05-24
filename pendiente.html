@@ -51,5 +51,32 @@
     <p>Estamos esperando la confirmación de tu entidad financiera.<br>Te notificaremos cuando el pago sea aprobado.</p>
     <a href="login.html">Volver al Inicio</a>
   </div>
+  <script>
+    const correo = localStorage.getItem('correoPago');
+    if (!correo) {
+        localStorage.setItem('toastMessage', JSON.stringify({
+  type: 'error',
+  message: 'No se encontró el correo. Redirigiendo...'
+}));
+
+window.location.href = 'login.html';
+      
+    }
+ setInterval(() => {
+    const timestamp = parseInt(localStorage.getItem('correoTimestamp'), 10);
+    const now = Date.now();
+    const maxTime = 15 * 60 * 1000; // 15 minutos
+
+    if (!timestamp || (now - timestamp) > maxTime) {
+        localStorage.removeItem('correoPago');
+        localStorage.removeItem('correoTimestamp');
+        localStorage.setItem('toastMessage', JSON.stringify({
+            type: 'info',
+            message: 'La sesión ha finalizado, vuelve a iniciar.'
+        }));
+        window.location.href = 'login.html';
+    }
+}, 60000); // verifica cada 1 minuto
+  </script>
 </body>
 </html>

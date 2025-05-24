@@ -10,6 +10,22 @@ Vue.filter('formatoMoneda', function(valor) {
         maximumFractionDigits: 2
     }).format(valor);
 });
+function showToast(message, type = 'info') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+
+    container.appendChild(toast);
+
+    // Quitar después de 4 segundos
+    setTimeout(() => {
+        toast.classList.add('hide');
+        setTimeout(() => container.removeChild(toast), 300); // deja animación salir
+    }, 4000);
+}
 
 new Vue({
     el: '#app', // Vincula Vue al elemento HTML con ID 'app'
@@ -312,6 +328,15 @@ new Vue({
         
     }
 });
+window.addEventListener('DOMContentLoaded', () => {
+    const storedToast = localStorage.getItem('toastMessage');
+    if (storedToast) {
+        const { type, message } = JSON.parse(storedToast);
+        showToast(message, type);
+        localStorage.removeItem('toastMessage'); // limpiar para no repetir
+    }
+});
+
 
     // Tiempo de inactividad en milisegundos
     const tiempoInactividad = 900000; // 5 segundos

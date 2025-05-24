@@ -172,16 +172,7 @@ input:focus {
 
 
     <script>
-      // función global para generar un toast
-function showToast(message, type = 'info') {
-  const container = document.getElementById('toast-container');
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.textContent = message;
-  container.appendChild(toast);
-  // lo elimino tras 3s (0.3 in + 2.7 delay + 0.3 out)
-  setTimeout(() => container.removeChild(toast), 3300);
-}
+    
         new Vue({
             el: '#loginApp',
             data: {
@@ -193,11 +184,20 @@ function showToast(message, type = 'info') {
                 zona: Intl.DateTimeFormat().resolvedOptions().timeZone  // Bogotá, por ejemplo
             },
             methods: {
+              showToast(message, type = 'info') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => container.removeChild(toast), 5000);
+  },
                 async iniciarSesion() {
                     this.error = '';
+                      this.showToast('Cargando datos, espera...','info');
                     this.loading=true;
                     if (!this.correo || this.password.length < 5) {
-                      showToast('Correo y contraseña (mín. 5 caracteres).', 'error');
+                      this.showToast('Correo y contraseña (mín. 5 caracteres).', 'error');
       return;
     }
                     const idSheets = '1Bd6qpAW36V8sVbcpjFkfD17t4IPPYiVkPFpXHNCGFLQ';
@@ -216,7 +216,7 @@ function showToast(message, type = 'info') {
 
       const userRow = users.find(r => r[0] === this.correo && r[2] === this.password);
       if (!userRow) {
-        showToast('Correo o contraseña incorrectos.', 'error');
+        this.showToast('Correo o contraseña incorrectos.', 'error');
         return;
       }
 
@@ -231,7 +231,7 @@ function showToast(message, type = 'info') {
         return new Date(y, m-1, d) >= today;
       });
       if (!valid) {
-        showToast('No tienes una suscripción activa.', 'error');
+        this.showToast('No tienes una suscripción activa.', 'error');
         return;
       }
 
@@ -241,13 +241,18 @@ function showToast(message, type = 'info') {
       // Registra el evento de inicio de sesión
 await logSessionEvent(this.correo, 'INICIO_SESION', this.zona);
       // redirige donde gustes tras login
-      showToast('¡Bienvenido!', 'success');
+      localStorage.setItem('toastMessage', JSON.stringify({
+  type: 'success',
+  message: '¡Bienvenido a la plataforma!'
+}));
 
-      window.location.href = 'index.html';
+window.location.href = 'index.html';
+
+     
 
     } catch (e) {
       console.error(e);
-      showToast('Error al conectar con el servidor.', 'error');
+      this.showToast('Error al conectar con el servidor.', 'error');
     }
     finally{
         this.loading=false; // <-- ocultar spinner SIEMPRE, éxito o error
@@ -261,9 +266,19 @@ await logSessionEvent(this.correo, 'INICIO_SESION', this.zona);
                     const fechaA = new Date(añoA, mesA - 1, diaA);
                     return fechaU >= fechaA;
                 },*/
-                
+            
+   
 
-            }
+            },
+            mounted() {
+  const storedToast = localStorage.getItem('toastMessage');
+  if (storedToast) {
+    const { type, message } = JSON.parse(storedToast);
+    this.showToast(message, type); // usa tu función toast ya existente
+    localStorage.removeItem('toastMessage'); // limpia para que no se repita
+  }
+}
+
         });
    
     </script>
