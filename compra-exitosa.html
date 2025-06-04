@@ -5,16 +5,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pago Exitoso</title>
+      
   <link rel="stylesheet" href="styles.css">
   <style>
     .status-container {
-      max-width: 500px;
-      margin: 3rem auto;
-      padding: 2rem;
-      background-color: rgba(40, 70, 40, 0.95);
-      border: 2px solid #00e676;
-      border-radius: 15px;
-      text-align: center;
+       margin: 80px auto 3rem; /* top, horizontal auto, bottom */
+  max-width: 500px;
+  padding: 2rem;
+  background-color: rgba(40, 70, 40, 0.95);
+  border: 2px solid #00e676;
+  border-radius: 15px;
+  text-align: center;
     }
     .status-container h1 {
       color: #00e676;
@@ -34,6 +35,14 @@
   </style>
 </head>
 <body>
+   <!-- Ícono de usuario flotante -->
+<div class="user-widget">
+  <div class="avatar-container">
+    <div class="avatar" id="avatarUser">👤</div>
+    <div class="email-tooltip-right" id="emailTooltip">correo@ejemplo.com</div>
+  </div>
+</div>
+
   <div class="status-container">
     <h1>✅ Pago exitoso</h1>
     <p>Gracias por tu suscripción. Ya puedes acceder a tu cuenta.</p>
@@ -41,6 +50,8 @@
   </div>
   <script>
     const correo = localStorage.getItem('correoPago');
+     const avatar = document.getElementById('avatarUser');
+  const tooltip = document.getElementById('emailTooltip');
     if (!correo) {
         localStorage.setItem('toastMessage', JSON.stringify({
   type: 'error',
@@ -49,6 +60,16 @@
 
 window.location.href = 'login.html';
       
+    }
+    else{
+      tooltip.textContent = correo;
+      let visible = false;
+
+    avatar.addEventListener('click', () => {
+       visible = !visible;
+      tooltip.style.display = visible ? 'block' : 'none';
+    });
+    
     }
  setInterval(() => {
     const timestamp = parseInt(localStorage.getItem('correoTimestamp'), 10);

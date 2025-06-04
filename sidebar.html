@@ -1,0 +1,105 @@
+<!-- sidebar.html -->
+<template id="tmpl-sidebar">
+  <nav class="sidebar">
+    <button class="sidebar__toggle" id="sidebar-toggle">☰</button>
+    <div class="sidebar__content">
+      <i class="fas fa-user-circle sidebar__icon"></i>
+      <span class="sidebar__email" id="sidebar-email"></span>
+    </div>
+  </nav>
+</template>
+
+<style>
+/* --- SIDEBAR STYLES --- */
+.sidebar {
+  position: fixed;
+  top: 0; right: -250px;
+  width: 250px; height: 100%;
+  background: #252540;
+  box-shadow: -2px 0 8px rgba(0,0,0,0.5);
+  transition: right 0.3s ease;
+  display: flex; flex-direction: column;
+  padding: 1rem;
+  z-index: 1000;
+}
+.sidebar.open {
+  right: 0;
+}
+.sidebar__toggle {
+  position: absolute;
+  left: -40px; top: 20px;
+  width: 36px; height: 36px;
+  border: none; border-radius: 4px;
+  background: #ff8000; color: #fff;
+  cursor: pointer;
+}
+.sidebar__content {
+  margin-top: auto;
+  text-align: center;
+}
+.sidebar__icon {
+  font-size: 48px;
+  color: #ff8000;
+  margin-bottom: 0.5rem;
+}
+.sidebar__email {
+  display: block;
+  color: #fff;
+  word-break: break-all;
+  font-size: 14px;
+}
+
+/* Responsive: en pantallas >1024px, auto ocultar toggle */
+@media(min-width:1024px){
+  .sidebar__toggle { display: none; }
+  .sidebar { right: 0; width: 200px; }
+}
+</style>
+
+<script>
+(function(){
+  // 1) Injerta el template en el documento
+  const tpl = document.getElementById('tmpl-sidebar');
+  if (!tpl) return;
+  document.body.insertAdjacentHTML('beforeend', tpl.innerHTML);
+
+  const sidebar = document.querySelector('.sidebar');
+  const btn = document.getElementById('sidebar-toggle');
+  const emailEl = document.getElementById('sidebar-email');
+
+  // 2) Toggle del sidebar
+  btn.addEventListener('click', ()=> sidebar.classList.toggle('open'));
+
+  // 3) Carga y valida correo + timestamp
+  const correo = localStorage.getItem('correoPago');
+  const ts = parseInt(localStorage.getItem('correoTimestamp'),10);
+  const now = Date.now();
+  if (!correo) {
+    localStorage.setItem('toastMessage', JSON.stringify({
+      type:'error', message:'No se encontró el correo. Redirigiendo...'
+    }));
+    return void window.location.replace('login.html');
+  }
+  // Si expiró (>15min)
+  if (!ts || (now - ts) > 15*60*1000) {
+    localStorage.clear();
+    localStorage.setItem('toastMessage', JSON.stringify({
+      type:'info', message:'Sesión expirada. Vuelve a iniciar.'
+    }));
+    return void window.location.replace('login.html');
+  }
+  emailEl.textContent = correo;
+
+  // 4) Vigilancia periódica (cada 30s)
+  setInterval(()=>{
+    const stamp = parseInt(localStorage.getItem('correoTimestamp'),10);
+    if (!stamp || Date.now() - stamp > 15*60*1000) {
+      localStorage.clear();
+      localStorage.setItem('toastMessage', JSON.stringify({
+        type:'info', message:'Sesión expirada. Vuelve a iniciar.'
+      }));
+      window.location.replace('login.html');
+    }
+  }, 30000);
+})();
+</script>

@@ -243,6 +243,7 @@ window.location.href = 'pago.html';
 
             } else if (existeUser) {
                  localStorage.setItem('correoPago', this.email.trim().toLowerCase());
+                 localStorage.setItem('correoTimestamp', Date.now());
              localStorage.setItem('toastMessage', JSON.stringify({
   type: 'info', // puede ser 'info', 'success', 'error'
   message: 'Ya existe este usuario, solo te falta pagar para activar tu suscripción.'

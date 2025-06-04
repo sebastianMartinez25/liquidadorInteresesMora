@@ -383,3 +383,60 @@ tbody tr:last-child td {
     to { opacity: 0; transform: translateY(-10px); }
   }
   
+  /* styles para avatar o user (inicio de sesion temporal antes de pagar*/
+  .user-widget {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 999;
+}
+
+.avatar-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.avatar {
+  width: 45px;
+  height: 45px;
+  background-color: #6c757d;
+  color: white;
+  border-radius: 50%;
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: transform 0.3s ease;
+}
+
+.avatar:hover {
+  transform: scale(1.05);
+}
+
+.email-tooltip-right {
+  display: none;
+  margin-left: 10px;
+  background-color: #252540;
+  color: #ffffff;
+  font-size: 13px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+@media screen and (max-width: 600px) {
+  .avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .email-tooltip-right {
+    font-size: 12px;
+    padding: 5px 10px;
+  }
+}
