@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Crear Usuario</title>
+     <link rel="icon" href="images/favicon.ico" type="image/x-icon">
   <script type="text/javascript"
         src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
 </script>
@@ -21,11 +22,13 @@
   <style>
     /* Wizard Container */
     #regApp {
-      width: 100%;
+      width: 98%;
       max-width: 400px;
       margin: auto;
       padding: 1.5rem;
       position: relative;
+       box-sizing: border-box;
+     
     }
     /* Wizard Navigation - no clickable to next */
     .wizard-nav {
@@ -199,14 +202,18 @@
           }
         },
         async validarCorreo() {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
           
-          
-          if (!this.email) {
-            this.showToast('error', 'Ingresa un correo válido.');
+          if (!this.email.trim()) {
+            this.showToast('error', 'El campo de correo está vacío.');
           
 
             return;
-          }
+          };
+          if (!emailRegex.test(this.email.trim())) {
+    this.showToast('error', 'El correo no tiene un formato válido.');
+    return;
+  };
           //
           try {
             this.loading = true;

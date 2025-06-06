@@ -188,6 +188,7 @@ tbody tr:last-child td {
     background: rgba(30, 30, 50, 0.9); /* Fondo semi-transparente estilo galaxia */
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+     box-sizing: border-box;
 }
 /* Contenedor del botón de cierre de sesión */
 #logout-container {
@@ -265,11 +266,28 @@ tbody tr:last-child td {
   .toggle-password:hover {
     color: #ffffff;
   }
-  
+  /* RECUPERAR CUENTA*/
+   .recover-link {
+  margin-top: 10px;
+  text-align: center;
+}
+
+.recover-link a {
+  font-size: 16px;
+  color: #3eaeb0;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.recover-link a:hover {
+  color: #ff8000;
+  text-decoration: underline;
+}
+/* FOOTER CREAR CUENTA*/
   
   .footer {
     margin-top: 20px;
-    font-size: 14px;
+    font-size: 16px;
     color: #ccc;
     text-align: center;
   }
