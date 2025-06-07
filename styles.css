@@ -48,7 +48,7 @@ input[type="text"] {
     padding: 12px;
     border: none;
     border-radius: 5px;
-    width: 100%; /* Asegurar que se ajuste al contenedor */
+    width: 95%; /* Asegurar que se ajuste al contenedor */
     max-width: 400px;
     font-size: 16px;
     background-color: #252540; /* Fondo oscuro espacial */

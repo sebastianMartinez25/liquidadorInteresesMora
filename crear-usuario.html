@@ -221,7 +221,7 @@
             const resp = await fetch('https://script.google.com/macros/s/AKfycbxMtt6eP3JErCTukrkIjCl4u9yEJ5E5Aa19pYIewRRNlnhnvLXjLvi_PaPr2q7jb88Z/exec', {
               method: 'POST',
               headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              body: JSON.stringify({ action: 'validate_email', correo: this.email })
+              body: JSON.stringify({ action: 'validate_email', correo: this.email.toLowerCase() })
             });
             const { status, existeSub, activa, existeUser, message } = await resp.json();
             if (status !== 'success') throw new Error(message);
@@ -299,7 +299,7 @@ window.location.href = 'pago.html';
   // 3) Enviar email con EmailJS
   try {
     await emailjs.send('service_omqfg48', 'template_Code_Liquidador', {
-      email:   this.email,      // coincide con {{email}}
+      email:   this.email.toLowerCase(),      // coincide con {{email}}
       passcode: code,           // coincide con {{passcode}}
       time:    expirationString // coincide con {{time}}
     }, 'XIJPuzpR4MOTsc098'
@@ -317,7 +317,7 @@ window.location.href = 'pago.html';
       headers: {'Content-Type': 'text/plain;charset=utf-8'},
       body: JSON.stringify({
         action:    'send_code',
-        correo:    this.email,
+        correo:    this.email.toLowerCase(),
         code:      code,
         userAgent: navigator.userAgent,
         zona:      Intl.DateTimeFormat().resolvedOptions().timeZone
@@ -353,7 +353,7 @@ async verificarCodigo() {
           headers: {'Content-Type': 'text/plain;charset=utf-8'},
           body: JSON.stringify({
             action: 'verify_code',
-            correo: this.email,
+            correo: this.email.toLowerCase(),
             code: this.code
           })
         });

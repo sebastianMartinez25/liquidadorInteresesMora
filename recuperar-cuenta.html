@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recuperar Cuenta</title>
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
+<script type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+</script>
+ <script type="text/javascript">
+   (function(){
+      emailjs.init({
+        publicKey: "XIJPuzpR4MOTsc098",
+      });
+   })();
+</script>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Contenedor principal */
+#recoveryApp {
+  width: 95%;
+  max-width: 400px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: rgba(50,50,70,0.9);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  color: #fff;
+  font-family: Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+/* Título */
+#recoveryApp h2 {
+  text-align: center;
+  color: #ffffff;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Navegación de pasos */
+.wizard-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  border-bottom: 2px solid rgba(255,255,255,0.2);
+}
+
+.wizard-nav div {
+  flex: 1;
+  text-align: center;
+  padding: 0.5rem 0;
+  color: #ccc;
+  font-size: 0.9rem;
+  position: relative;
+}
+
+.wizard-nav .active {
+  color: #fff;
+  font-weight: bold;
+}
+
+.wizard-nav .active::after {
+  content: "";
+  position: absolute;
+  left: 25%;
+  bottom: -2px;
+  width: 50%;
+  height: 3px;
+  background: #ff8000;
+  border-radius: 2px;
+}
+
+/* Cada paso */
+.step {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Inputs y botones */
+.step label {
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+.step input {
+  padding: 0.75rem;
+  border: none;
+  border-radius: 5px;
+  background: #252540;
+  color: #fff;
+  font-size: 1rem;
+  outline: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.step input:focus {
+  transform: scale(1.02);
+  box-shadow: 0 0 8px rgba(255,128,0,0.8);
+}
+
+/* Botones */
+.step .btn-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.step .btn-group button {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 25px;
+  background: linear-gradient(45deg, #ff8000, #ff4d00);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.step .btn-group button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(255,128,0,0.6);
+}
+
+
+
+/* Animación de entrada */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsividad */
+@media screen and (max-width: 480px) {
+  #recoveryApp {
+    padding: 1rem;
+  }
+  .wizard-nav div {
+    font-size: 0.8rem;
+    padding: 0.4rem 0;
+  }
+  .step input, .step .btn-group button {
+    font-size: 0.9rem;
+  }
+}
+
+   
+  </style>
+</head>
+<body>
+   
+
+  <div id="recoveryApp">
+    <h2>Recuperar Contraseña</h2>
+
+    <!-- Paso 1: Email -->
+    <div class="step" v-show="step === 1">
+      <label>Correo electrónico</label>
+      <input type="email" v-model="email" placeholder="Ingresa tu correo" />
+      <button @click="validarCorreo">Continuar</button>
+    </div>
+
+    <!-- Paso 2: Código OTP -->
+    <div class="step" v-show="step === 2">
+      <label>Ingresa el código OTP que recibiste</label>
+      <input type="text" v-model="code" placeholder="Código de 6 dígitos" maxlength="6" />
+      <div class="btn-group">
+        <button @click="step = 1">Atrás</button>
+        <button @click="verificarCodigo">Validar</button>
+      </div>
+    </div>
+
+    <!-- Paso 3: Nueva contraseña -->
+    <div class="step" v-show="step === 3">
+      <label>Nueva contraseña</label>
+      <input type="password" v-model="password" placeholder="Nueva contraseña" minlength="5" />
+      <label>Confirmar contraseña</label>
+      <input type="password" v-model="confirmPassword" placeholder="Confirma la contraseña" minlength="5" />
+      <div class="btn-group">
+        <button @click="step = 2">Atrás</button>
+        <button @click="actualizarPassword">Cambiar Contraseña</button>
+      </div>
+    </div>
+ <!--- spinner-->
+          <div v-if="loading" class="loader-container-overlay">
+            <div class="spinner"></div>
+          </div>
+    <div class="toast-container">
+      <div v-for="(t, i) in toasts" :key="i" :class="['toast', t.type]">{{ t.message }}</div>
+    </div>
+  </div>
+
+  <script>
+    new Vue({
+      el: '#recoveryApp',
+      data: {
+        step: 1,
+        email: '',
+        code: '',
+        password: '',
+        confirmPassword: '',
+        loading: false,
+        toasts: [],
+        id_user: null
+      },
+      methods: {
+        
+
+        async validarCorreo() {
+            const idSheets = '1Bd6qpAW36V8sVbcpjFkfD17t4IPPYiVkPFpXHNCGFLQ';
+            const apiKey = 'AIzaSyAYGHByZLx72_QpK8jSCkz-v54vnkjhdfU';
+            
+           
+          if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.email.toLowerCase())) {
+            
+            this.showToast('error', 'El correo no tiene un formato válido');
+            return;
+          }
+
+          try {
+           this.showToast('info','Cargando datos, espera...');
+             this.loading=true;
+            const res = await axios.get(`https://sheets.googleapis.com/v4/spreadsheets/${idSheets}/values/suscripcion!B2:F1000?key=${apiKey}`);
+            const rows = res.data.values;
+            const row = rows.find(r => r[1] === this.email.toLowerCase());
+
+            if (!row) {
+              this.showToast('error', 'Correo no encontrado');
+              return;
+            }
+
+            const fechaPago = row[4]; // F
+            const [d, m, y] = fechaPago.split('/');
+            const limite = new Date(y, m - 1, d);
+            const hoy = new Date();
+
+            if (hoy > limite) {
+              this.showToast('error', 'Suscripción vencida');
+              return;
+            }
+
+            this.id_user = row[0]; // B
+            await this.enviarOTP();
+            this.showToast('success', 'Se envió un código OTP válido por 15 min');
+            this.step = 2;
+
+          } catch (e) {
+            console.error(e);
+            this.showToast('error', 'Error al validar correo');
+          }
+          finally{
+           this.loading=false;
+          }
+        },
+
+        async enviarOTP() {
+          const code = Math.floor(100000 + Math.random() * 900000).toString();
+           const now = new Date();
+          const fecha = now.toLocaleDateString('es-CO');
+          const hora = now.toLocaleTimeString('es-CO');
+          //Calcular tiempo de expiración (15 minutos)
+ 
+  const expires = new Date(now.getTime() + 15 * 60 * 1000);
+
+  // Formatear fecha y hora para mostrar en el correo
+  // Ej: '01/05/2025 14:37'
+  const pad = n => n.toString().padStart(2, '0');
+  const fechaExp = 
+    pad(expires.getDate()) + '/' +
+    pad(expires.getMonth() + 1) + '/' +
+    expires.getFullYear();
+  const horaExp = 
+    pad(expires.getHours()) + ':' +
+    pad(expires.getMinutes());
+
+  const expirationString = `${fechaExp} ${horaExp}`;
+
+          // 1. Enviar con EmailJS
+          await emailjs.send('service_omqfg48', 'template_Reset_Password', {
+            email: this.email,
+            passcode: code,
+            time: expirationString
+          });
+
+          // 2. Registrar en Sheets
+          await fetch('https://script.google.com/macros/s/AKfycbxMtt6eP3JErCTukrkIjCl4u9yEJ5E5Aa19pYIewRRNlnhnvLXjLvi_PaPr2q7jb88Z/exec', {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({
+              action: 'store_otp',
+              id_user: this.id_user,
+              correo: this.email.toLowerCase(),
+              code,
+              motivo: 'change_password',
+              fecha,
+              hora,
+              userAgent: navigator.userAgent,
+              zona: Intl.DateTimeFormat().resolvedOptions().timeZone
+            })
+          });
+        },
+
+        async verificarCodigo() {
+            const idSheets = '1Bd6qpAW36V8sVbcpjFkfD17t4IPPYiVkPFpXHNCGFLQ';
+            const apiKey = 'AIzaSyAYGHByZLx72_QpK8jSCkz-v54vnkjhdfU';
+          try {
+           this.showToast('info','Cargando datos, espera...');
+             this.loading=true;
+            const res = await axios.get(`https://sheets.googleapis.com/v4/spreadsheets/${idSheets}/values/emailsAut!B2:G1000?key=${apiKey}`);
+            const rows = res.data.values.filter(r => r[0] === this.id_user && r[1] === this.email.toLowerCase() && r[5] === 'change_password');
+            const ultimo = rows[rows.length - 1];
+
+            if (!ultimo || ultimo[4] !== this.code) {
+              this.showToast('error', 'Código inválido');
+              return;
+            }
+
+            // validar tiempo
+            const [h, m, s] = ultimo[4].split(':').map(Number);
+            const [d, mo, y] = ultimo[3].split('/').map(Number);
+            const fechaOTP = new Date(y, mo - 1, d, h, m, s);
+            const ahora = new Date();
+
+            if ((ahora - fechaOTP) > 15 * 60 * 1000) {
+              this.showToast('error', 'Código expirado');
+              return;
+            }
+
+            this.showToast('success', 'Código validado');
+            this.step = 3;
+          } catch (e) {
+            console.error(e);
+            this.showToast('error', 'Error validando código');
+          }
+          finally
+        {
+            this.loading=false;
+        }
+        },
+
+        async actualizarPassword() {
+          if (this.password.length < 5 || this.password !== this.confirmPassword) {
+            this.showToast('error', 'Las contraseñas no coinciden o son muy cortas');
+            return;
+          }
+
+          const fecha = new Date().toLocaleDateString('es-CO');
+          const hora = new Date().toLocaleTimeString('es-CO');
+
+          const payload = {
+            action: 'update_password',
+            id_user: this.id_user,
+            password: this.password,
+            motivo: 'change_password',
+            fecha,
+            hora,
+            userAgent: navigator.userAgent,
+            zona: Intl.DateTimeFormat().resolvedOptions().timeZone
+          };
+
+          try {
+            this.showToast('info','Cargando datos, espera...');
+             this.loading=true;
+            await fetch('https://script.google.com/macros/s/AKfycbxMtt6eP3JErCTukrkIjCl4u9yEJ5E5Aa19pYIewRRNlnhnvLXjLvi_PaPr2q7jb88Z/exec', {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify(payload)
+            });
+
+            this.showToast('success', 'Contraseña actualizada correctamente');
+            setTimeout(() => window.location.href = 'login.html', 2000);
+
+          } catch (err) {
+            this.showToast('error', 'Error actualizando contraseña');
+          }
+          finally{
+            this.loading=false;
+          }
+        },
+        showToast(type, message) {
+          this.toasts.push({ type, message });
+          setTimeout(() => this.toasts.shift(), 5000);
+        }
+        
+      }
+      
+    });
+  </script>
+</body>
+</html>

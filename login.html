@@ -203,7 +203,7 @@ input:focus {
                     this.error = '';
                       this.showToast('Cargando datos, espera...','info');
                     this.loading=true;
-                    if (!this.correo || this.password.length < 5) {
+                    if (!this.correo.toLowerCase() || this.password.length < 5) {
                       this.showToast('Correo y contraseña (mín. 5 caracteres).', 'error');
       return;
     }
@@ -221,7 +221,7 @@ input:focus {
         `https://sheets.googleapis.com/v4/spreadsheets/${idSheets}/values/users!D2:F1000?key=${apiKey}`
       )).data;
 
-      const userRow = users.find(r => r[0] === this.correo && r[2] === this.password);
+      const userRow = users.find(r => r[0] === this.correo.toLowerCase() && r[2] === this.password);
       if (!userRow) {
         this.showToast('Correo o contraseña incorrectos.', 'error');
         return;
@@ -233,7 +233,7 @@ input:focus {
       )).data;
 
       const valid = subs.some(r => {
-        if (r[0] !== this.correo) return false;
+        if (r[0] !== this.correo.toLowerCase()) return false;
         const [d,m,y] = r[2].split('/').map(Number);
         return new Date(y, m-1, d) >= today;
       });
@@ -244,9 +244,9 @@ input:focus {
 
       // TODO: autenticar, guardar localStorage, logSessionEvent...
       localStorage.setItem('auth', 'true');
-      localStorage.setItem('userEmail', this.correo);
+      localStorage.setItem('userEmail', this.correo.toLowerCase());
       // Registra el evento de inicio de sesión
-await logSessionEvent(this.correo, 'INICIO_SESION', this.zona);
+await logSessionEvent(this.correo.toLowerCase(), 'INICIO_SESION', this.zona);
       // redirige donde gustes tras login
       localStorage.setItem('toastMessage', JSON.stringify({
   type: 'success',
