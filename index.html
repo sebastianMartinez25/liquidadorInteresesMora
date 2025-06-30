@@ -19,15 +19,12 @@
 
 </head>
 <header>
-    
-    <div id="logout-container">
-        <button id="logout-button" onclick="cerrarSesion()">Cerrar Sesión</button>
-    </div>
+ 
 </header>
 
 
 <body>
-  <!-- ) Placeholder donde montamos el componente -->
+    <!-- ) Placeholder donde montamos el componente -->
   <div id="sidebar-root">
     <sidebar></sidebar>
   </div>
@@ -114,9 +111,12 @@
 
     </div>
     <div id="toast-container" class="toast-container"></div>
+ <!-- Spinner oculto por defecto -->
+<div id="spinner-overlay" class="spinner-overlay" style="display: none;">
+  <div class="spinner"></div>
+</div>
 
-  </main>
-   <script src="/sidebar/sidebar.js"></script>
+   <script src="sidebar/sidebar.js"></script>
     <script src="app.js">
      
     </script>

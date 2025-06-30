@@ -1,6 +1,4 @@
-if (localStorage.getItem('auth') !== 'true') {
-    window.location.href = 'login.html'; // Redirigir al login si no está autenticado
-};
+
 Vue.filter('formatoMoneda', function(valor) {
     if (!valor) return '0.00';
 

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mi Perfil</title>
+   <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+  <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="sidebar/sidebar.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+  <!-- Sidebar -->
+  <div id="sidebar-root">
+    <sidebar></sidebar>
+  </div>
+  <button class="btn-toggle" onclick="window.$sidebarVm.toggleSidebar()">
+    <i class="fas fa-bars"></i>
+  </button>
+  <div class="sidebar-overlay" onclick="window.$sidebarVm.cerrarSidebar()"></div>
+
+  <!-- Contenido -->
+  <main id="perfilApp" class="with-sidebar">
+    <div class="perfil-container">
+      <h1>Mi Perfil</h1>
+
+      <form @submit.prevent="guardarCambios">
+        <div class="form-group">
+          <label>Nombre completo:</label>
+          <input v-model="usuario.nombre" required />
+        </div>
+
+        <div class="form-group">
+          <label>Correo electrónico:</label>
+          <input v-model="usuario.correo" type="email" required />
+        </div>
+
+        <div class="form-group">
+          <label>Teléfono:</label>
+          <input v-model="usuario.telefono" type="tel" />
+        </div>
+
+        <div class="form-group">
+          <label>Contraseña:</label>
+          <input v-model="usuario.password" type="password" minlength="5" />
+        </div>
+
+        <p>Días restantes de suscripción: <strong>{{ diasRestantes }}</strong></p>
+
+        <button type="submit">Guardar cambios</button>
+      </form>
+
+      <div class="spinner" v-if="cargando"></div>
+      <div id="toast-container" class="toast-container"></div>
+    </div>
+  </main>
+
+  <script src="sidebar/sidebar.js"></script>
+  <script src="perfil.js"></script>
+</body>
+</html>
