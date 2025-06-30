@@ -1,0 +1,126 @@
+.sidebar {
+  position: fixed; top: 0; left: 0;
+  width: 250px; height: 100%;
+  background: #252540; color: #fff;
+  transform: translateX(-100%);
+  transition: transform .3s ease;
+  overflow: visible; z-index: 1000;
+ 
+}
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar .logo {
+  padding: 1rem; text-align: center;
+  background: #1f1f3a;
+}
+.sidebar .logo img { max-width: 120px; }
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: #ccc;
+  text-decoration: none;
+  border-left: 4px solid transparent;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.sidebar nav a i {
+  width: 20px;
+  text-align: center;
+}
+
+.sidebar nav a:hover {
+  background: #33335c;
+  color: #fff;
+}
+
+.sidebar nav a.active {
+  background: rgba(255, 128, 0, 0.15);
+  color: #ff8000;
+  border-left: 4px solid #ff8000;
+}
+
+.sidebar .usuario {
+  margin-top: auto;
+  padding: 1rem;
+  border-top: 1px solid #3a3a5a;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  word-break: break-word;
+}
+
+.sidebar .usuario span {
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
+.sidebar .usuario .opciones {
+  position: absolute;
+  top: 0;
+  left: 80%;
+  background: #252540;
+  box-shadow: 0 0 6px rgba(0, 0, 0, 0.3);
+  padding: 0.5rem;
+  border-radius: 6px;
+  white-space: nowrap;
+  z-index: 2000;
+  width: 160px;
+}
+
+.sidebar .usuario .opciones a {
+  display: block;
+  padding: 0.4rem 1rem;
+  color: #ccc;
+  font-size: 14px;
+}
+
+.sidebar .usuario .opciones a:hover {
+  background: #33335c;
+  color: #fff;
+}
+
+/* Fondo oscuro para cerrar el sidebar (solo móvil) */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.4);
+  z-index: 999;
+}
+
+/* Mostrar el overlay solo si el sidebar está abierto y es móvil */
+body.sidebar-open .sidebar-overlay {
+  display: block;
+}
+
+/* Botón hamburguesa solo visible en móviles */
+/* SIEMPRE visible el botón toggle */
+.btn-toggle {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 1100;
+  background: #3eaeb1;
+  color: white;
+  border: none;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.btn-toggle:hover {
+  transform: scale(1);
+}
+

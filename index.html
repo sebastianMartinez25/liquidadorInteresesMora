@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Liquidador de intereses de mora</title>
       <link rel="icon" href="images/favicon.ico" type="image/x-icon">
-    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+     
+
+   <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+   
+  
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <script src="utils.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
-
+<link rel="stylesheet" href="sidebar/sidebar.css">
 
 </head>
 <header>
-    <h1>Bienvenido</h1>
+    
     <div id="logout-container">
         <button id="logout-button" onclick="cerrarSesion()">Cerrar Sesión</button>
     </div>
@@ -22,7 +27,28 @@
 
 
 <body>
-    <div id="app">
+  <!-- ) Placeholder donde montamos el componente -->
+  <div id="sidebar-root">
+    <sidebar></sidebar>
+  </div>
+
+ <!-- Botón ☰ siempre visible -->
+<button class="btn-toggle" onclick="window.$sidebarVm.toggleSidebar()">
+  <i class="fas fa-bars"></i>
+</button>
+
+<!-- Overlay (opcional para UX) -->
+<div class="sidebar-overlay" onclick="window.$sidebarVm.cerrarSidebar()"></div>
+
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main :class="{ 'with-sidebar': window.$sidebarVm.abierto }">
+    <!-- Tu contenido va aquí -->
+    <h1>Bienvenido</h1>
+  </main>
+  
+    <!-- tu contenido -->
+ <div id="app">
         <h1>Liquidador Judicial</h1>
         <label for="startDate">Fecha Inicial:</label>
         <input type="date" id="startDate" v-model="startDate">
@@ -89,8 +115,14 @@
     </div>
     <div id="toast-container" class="toast-container"></div>
 
+  </main>
+   <script src="/sidebar/sidebar.js"></script>
     <script src="app.js">
      
     </script>
+   
+ 
+
+
 </body>
 </html>

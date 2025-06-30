@@ -337,31 +337,3 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-
-    // Tiempo de inactividad en milisegundos
-    const tiempoInactividad = 900000; // 5 segundos
-    let timeout;
-
-    // Función para cerrar la sesión
-   async function cerrarSesion() {
-        const email = localStorage.getItem('userEmail') || 'desconocido';
-        const zona = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  // Log de fin de sesión
-  await logSessionEvent(email, 'FIN_SESION', zona);
-        alert('Tu sesión ha expirado por inactividad.');
-        localStorage.removeItem('auth'); // Elimina la autenticación
-        localStorage.removeItem('userEmail');
-        window.location.href = 'login.html'; // Redirige al login
-    }
-
-    // Restablecer el temporizador cuando haya actividad
-    function resetearTiempo() {
-        clearTimeout(timeout); // Limpia el temporizador anterior
-        timeout = setTimeout(cerrarSesion, tiempoInactividad); // Reinicia el temporizador
-    }
-
-    // Escuchar eventos del usuario
-    window.onload = resetearTiempo; // Cuando se carga la página
-    document.onmousemove = resetearTiempo; // Movimiento del mouse
-    document.onkeydown = resetearTiempo; // Teclas presionadas
-    document.ontouchstart = resetearTiempo; // Toques en pantalla táctil
