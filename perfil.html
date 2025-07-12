@@ -52,6 +52,43 @@
         <button type="submit">Guardar cambios</button>
       </form>
 
+      <!-- Sección de Historial de Suscripciones -->
+      <div class="subscription-history" v-if="historialSuscripciones.length > 0">
+        <h2>Historial de Suscripciones</h2>
+        <div class="table-responsive">
+          <table class="subscription-table">
+            <thead>
+              <tr>
+                <th>Fecha de Inicio</th>
+                <th>Fecha de Fin</th>
+                <th>Tipo de Suscripción</th>
+                <th>Estado</th>
+                <th>Duración</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(suscripcion, index) in historialSuscripciones" :key="index"
+                  :class="{ 'active-subscription': suscripcion.activa }">
+                <td :data-label="'Fecha de Inicio'">{{ suscripcion.fechaInicio }}</td>
+                <td :data-label="'Fecha de Fin'">{{ suscripcion.fechaFin }}</td>
+                <td :data-label="'Tipo de Suscripción'">{{ suscripcion.tipo }}</td>
+                <td :data-label="'Estado'">
+                  <span :class="'status-badge ' + suscripcion.estadoClass">
+                    {{ suscripcion.estado }}
+                  </span>
+                </td>
+                <td :data-label="'Duración'">{{ suscripcion.duracion }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Mensaje si no hay historial -->
+      <div v-else-if="!cargando" class="no-history">
+        <p>No se encontró historial de suscripciones.</p>
+      </div>
+
       <div class="spinner" v-if="cargando"></div>
       <div id="toast-container" class="toast-container"></div>
     </div>
