@@ -23,8 +23,8 @@ Vue.component('sidebar', {
   <a href="perfil.html" :class="{ active: paginaActual === 'perfil.html' }">
     <i class="fas fa-user"></i> Perfil
   </a>
-  <a href="planes.html" :class="{ active: paginaActual === 'planes.html' }">
-    <i class="fas fa-credit-card"></i> Planes
+  <a href="pago.html" :class="{ active: paginaActual === 'pago.html' }">
+    <i class="fas fa-credit-card"></i> Planes <i class="fa-solid fa-arrow-up-right-from-square"></i>
   </a>
 </nav>
 
